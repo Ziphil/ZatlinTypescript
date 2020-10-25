@@ -1,12 +1,10 @@
 //
 
 import {
+  Generatable,
   Identifier,
   Zatlin
 } from ".";
-import {
-  Generatable
-} from "./generatable";
 
 
 export class Definition {

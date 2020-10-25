@@ -2,15 +2,13 @@
 
 import {
   Definition,
+  Generatable,
   Identifier,
   ZatlinError
 } from ".";
 import {
   Parsers
 } from "../parser/parsers";
-import {
-  Generatable
-} from "./generatable";
 
 
 export class Zatlin {
