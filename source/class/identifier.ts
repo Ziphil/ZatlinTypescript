@@ -31,7 +31,7 @@ export class Identifier implements Generatable {
       let to = content.match(string, from, zatlin);
       return to;
     } else {
-      throw new ZatlinError(9000, "Cannot happen (at Identifier#match)");
+      throw new ZatlinError(9001, "Cannot happen (at Identifier#match)");
     }
   }
 
@@ -41,7 +41,7 @@ export class Identifier implements Generatable {
       let matchable = content.isMatchable(zatlin);
       return matchable;
     } else {
-      throw new ZatlinError(9000, "Cannot happen (at Identifier#isMatchable)");
+      throw new ZatlinError(9002, "Cannot happen (at Identifier#isMatchable)");
     }
   }
 

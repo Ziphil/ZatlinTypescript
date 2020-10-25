@@ -21,20 +21,30 @@ export class Zatlin {
     let mainGeneratable;
     for (let sentence of sentences) {
       if (sentence instanceof Definition) {
-        definitions.push(sentence);
+        let duplicatedIndex = definitions.findIndex((definition) => {
+          let castSentence = sentence as Definition;
+          return definition.identifier.equals(castSentence.identifier);
+        });
+        if (duplicatedIndex < 0) {
+          definitions.push(sentence);
+        } else {
+          throw new ZatlinError(1102, `Duplicate definition of identifier: '${sentence.identifier}'`);
+        }
       } else {
         if (mainGeneratable === undefined) {
           mainGeneratable = sentence;
         } else {
-          throw new ZatlinError(1009, "There are multiple main patterns");
+          throw new ZatlinError(1001, "There are multiple main patterns");
         }
       }
     }
     if (mainGeneratable === undefined) {
-      throw new ZatlinError(1009, "There is no main pattern");
+      throw new ZatlinError(1000, "There is no main pattern");
     }
     this.definitions = definitions;
     this.mainGeneratable = mainGeneratable;
+    this.checkUnknownIdentifier();
+    this.checkCircularIdentifier();
   }
 
   public static load(source: string): Zatlin {
@@ -46,7 +56,27 @@ export class Zatlin {
     if (this.mainGeneratable !== undefined) {
       return this.mainGeneratable.generate(this);
     } else {
-      throw new ZatlinError(9003, "Cannot happen (at Zatlin#generate)");
+      throw new ZatlinError(9005, "Cannot happen (at Zatlin#generate)");
+    }
+  }
+
+  // 識別子定義文や変換規則定義文でモジュール内に存在しない識別子を参照していないかチェックします。
+  private checkUnknownIdentifier(): void {
+    for (let definition of this.definitions) {
+      let identifier = definition.findUnknownIdentifier(this);
+      if (identifier !== undefined) {
+        throw new ZatlinError(1100, `Unresolved identifier: '${identifier.text}' in '${definition}'`);
+      }
+    }
+  }
+
+  // 識別子定義文で識別子が循環参照していないかチェックします。
+  private checkCircularIdentifier(): void {
+    for (let definition of this.definitions) {
+      let identifier = definition.findCircularIdentifier([], this);
+      if (identifier !== undefined) {
+        throw new ZatlinError(1101, `Circular reference involving identifier: '${identifier.text}' in '${definition}'`);
+      }
     }
   }
 

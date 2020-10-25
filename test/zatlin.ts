@@ -107,6 +107,32 @@ describe("normal", () => {
 });
 
 describe("errors", () => {
+  test("no main pattern", () => {
+    expect.assertions(2);
+    try {
+      let zatlin = Zatlin.load(`
+        foo = "a" | "b";
+        bar = "c" | foo;
+      `);
+    } catch (error) {
+      expect(error.name).toBe("ZatlinError");
+      expect(error.code).toBe(1000);
+    }
+  });
+  test("multiple main patterns", () => {
+    expect.assertions(2);
+    try {
+      let zatlin = Zatlin.load(`
+        % foo;
+        foo = "a" | "b";
+        bar = "c" | foo;
+        % bar;
+      `);
+    } catch (error) {
+      expect(error.name).toBe("ZatlinError");
+      expect(error.code).toBe(1001);
+    }
+  });
   test("unresolved identifier", () => {
     expect.assertions(2);
     try {
@@ -117,7 +143,61 @@ describe("errors", () => {
       `);
     } catch (error) {
       expect(error.name).toBe("ZatlinError");
-      expect(error.code).toBe(1000);
+      expect(error.code).toBe(1100);
+    }
+  });
+  test("circular identifier", () => {
+    expect.assertions(2);
+    try {
+      let zatlin = Zatlin.load(`
+        foo = bar | circular;
+        circular = bar | baz;
+        baz = foo;
+        bar = "a" | "b";
+        % foo;
+      `);
+    } catch (error) {
+      expect(error.name).toBe("ZatlinError");
+      expect(error.code).toBe(1101);
+    }
+  });
+  test("duplicate identifier", () => {
+    expect.assertions(2);
+    try {
+      let zatlin = Zatlin.load(`
+        foo = "a" | "b";
+        bar = "c";
+        baz = "d";
+        foo = "e" | "f";
+        % foo;
+      `);
+    } catch (error) {
+      expect(error.name).toBe("ZatlinError");
+      expect(error.code).toBe(1102);
+    }
+  });
+  test("possibly empty 1", () => {
+    expect.assertions(2);
+    try {
+      let zatlin = Zatlin.load(`
+        % "ab" | "ac" | "bc" - ^ "a" | "c" ^;
+      `);
+      zatlin.generate();
+    } catch (error) {
+      expect(error.name).toBe("ZatlinError");
+      expect(error.code).toBe(2000);
+    }
+  });
+  test("possibly empty 2", () => {
+    expect.assertions(2);
+    try {
+      let zatlin = Zatlin.load(`
+        % "a" 1000000 | "b" 1 - "a";
+      `);
+      zatlin.generate();
+    } catch (error) {
+      expect(error.name).toBe("ZatlinError");
+      expect(error.code).toBe(2000);
     }
   });
 });

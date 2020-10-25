@@ -32,7 +32,7 @@ export class Compound implements Generatable {
     if (this.exclusion === undefined) {
       return this.generatable.match(string, from, zatlin);
     } else {
-      throw new ZatlinError(9009, "Cannot happen (at Compound#match)");
+      throw new ZatlinError(9004, "Cannot happen (at Compound#match)");
     }
   }
 

@@ -25,7 +25,7 @@ export class Disjunction implements Generatable {
         return generatable.generate(zatlin);
       }
     }
-    throw new ZatlinError(9009, "Cannot happen (at Disjunction#generate)");
+    throw new ZatlinError(9003, "Cannot happen (at Disjunction#generate)");
   }
 
   public match(string: string, from: number, zatlin: Zatlin): number {
