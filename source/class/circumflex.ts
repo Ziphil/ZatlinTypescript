@@ -3,12 +3,11 @@
 import {
   Generatable,
   Identifier,
-  Matchable,
   Zatlin
 } from ".";
 
 
-export class Circumflex implements Generatable, Matchable {
+export class Circumflex implements Generatable {
 
   public readonly leading: boolean;
 
@@ -34,6 +33,10 @@ export class Circumflex implements Generatable, Matchable {
         return -1;
       }
     }
+  }
+
+  public isMatchable(zatlin: Zatlin): boolean {
+    return true;
   }
 
   public findUnknownIdentifier(zatlin: Zatlin): Identifier | undefined {

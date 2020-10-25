@@ -28,6 +28,30 @@ export class Disjunction implements Generatable {
     throw new ZatlinError(9009, "Cannot happen (at Disjunction#generate)");
   }
 
+  public match(string: string, from: number, zatlin: Zatlin): number {
+    if (this.weightedGeneratables.length > 0) {
+      for (let [generatable] of this.weightedGeneratables) {
+        let to = generatable.match(string, from, zatlin);
+        if (to >= 0) {
+          return to;
+        }
+      }
+      return -1;
+    } else {
+      return -1;
+    }
+  }
+
+  public isMatchable(zatlin: Zatlin): boolean {
+    for (let [generatable] of this.weightedGeneratables) {
+      let matchable = generatable.isMatchable(zatlin);
+      if (!matchable) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   public findUnknownIdentifier(zatlin: Zatlin): Identifier | undefined {
     for (let [generatable] of this.weightedGeneratables) {
       let identifier = generatable.findUnknownIdentifier(zatlin);

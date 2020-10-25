@@ -19,6 +19,19 @@ export class Quote implements Generatable {
     return this.text;
   }
 
+  public match(string: string, from: number, zatlin: Zatlin): number {
+    let candidate = string.substr(from, string.length);
+    if (string === candidate) {
+      return from + string.length;
+    } else {
+      return -1;
+    }
+  }
+
+  public isMatchable(zatlin: Zatlin): boolean {
+    return true;
+  }
+
   public findUnknownIdentifier(zatlin: Zatlin): Identifier | undefined {
     return undefined;
   }

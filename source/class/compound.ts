@@ -3,7 +3,6 @@
 import {
   Generatable,
   Identifier,
-  Matchable,
   Zatlin,
   ZatlinError
 } from ".";
@@ -12,27 +11,39 @@ import {
 export class Compound implements Generatable {
 
   private readonly generatable: Generatable;
-  private readonly matchable?: Matchable;
+  private readonly exclusion?: Generatable;
 
-  public constructor(generatable: Generatable, matchable?: Matchable) {
+  public constructor(generatable: Generatable, exclusion?: Generatable) {
     this.generatable = generatable;
-    this.matchable = matchable;
+    this.exclusion = exclusion;
   }
 
   public generate(zatlin: Zatlin): string {
     for (let i = 0 ; i < 100 ; i ++) {
       let output = this.generatable.generate(zatlin);
-      if (!this.testMatchable(output, zatlin)) {
+      if (!this.testExclusion(output, zatlin)) {
         return output;
       }
     }
     throw new ZatlinError(2000, "Possibly empty");
   }
 
-  private testMatchable(string: string, zatlin: Zatlin): boolean {
-    if (this.matchable !== undefined) {
+  public match(string: string, from: number, zatlin: Zatlin): number {
+    if (this.exclusion !== undefined) {
+      return this.generatable.match(string, from, zatlin);
+    } else {
+      throw new ZatlinError(9009, "Cannot happen (at Compound#match)");
+    }
+  }
+
+  public isMatchable(zatlin: Zatlin): boolean {
+    return this.generatable.isMatchable(zatlin) && this.exclusion === undefined;
+  }
+
+  private testExclusion(string: string, zatlin: Zatlin): boolean {
+    if (this.exclusion !== undefined) {
       for (let from = 0 ; from <= string.length ; from ++) {
-        if (this.matchable.match(string, from, zatlin)) {
+        if (this.exclusion.match(string, from, zatlin)) {
           return true;
         }
       }
@@ -43,18 +54,18 @@ export class Compound implements Generatable {
   }
 
   public findUnknownIdentifier(zatlin: Zatlin): Identifier | undefined {
-    return this.generatable.findUnknownIdentifier(zatlin) ?? this.matchable?.findUnknownIdentifier(zatlin);
+    return this.generatable.findUnknownIdentifier(zatlin) ?? this.exclusion?.findUnknownIdentifier(zatlin);
   }
 
   public findCircularIdentifier(identifiers: Array<Identifier>, zatlin: Zatlin): Identifier | undefined {
-    return this.generatable.findCircularIdentifier(identifiers, zatlin) ?? this.matchable?.findCircularIdentifier(identifiers, zatlin);
+    return this.generatable.findCircularIdentifier(identifiers, zatlin) ?? this.exclusion?.findCircularIdentifier(identifiers, zatlin);
   }
 
   public toString(): string {
     let string = "";
     string += this.generatable.toString();
-    if (this.matchable !== undefined) {
-      string += ` - ${this.matchable.toString()}`;
+    if (this.exclusion !== undefined) {
+      string += ` - ${this.exclusion.toString()}`;
     }
     return string;
   }

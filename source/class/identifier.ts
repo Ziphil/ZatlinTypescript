@@ -25,6 +25,26 @@ export class Identifier implements Generatable {
     }
   }
 
+  public match(string: string, from: number, zatlin: Zatlin): number {
+    let content = zatlin.findContent(this);
+    if (content !== undefined) {
+      let to = content.match(string, from, zatlin);
+      return to;
+    } else {
+      throw new ZatlinError(9000, "Cannot happen (at Identifier#match)");
+    }
+  }
+
+  public isMatchable(zatlin: Zatlin): boolean {
+    let content = zatlin.findContent(this);
+    if (content !== undefined) {
+      let matchable = content.isMatchable(zatlin);
+      return matchable;
+    } else {
+      throw new ZatlinError(9000, "Cannot happen (at Identifier#isMatchable)");
+    }
+  }
+
   public findUnknownIdentifier(zatlin: Zatlin): Identifier | undefined {
     if (!zatlin.hasDefinition(this)) {
       return this;
