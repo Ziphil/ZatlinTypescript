@@ -20,9 +20,9 @@ export class Quote implements Generatable {
   }
 
   public match(string: string, from: number, zatlin: Zatlin): number {
-    let candidate = string.substr(from, string.length);
-    if (string === candidate) {
-      return from + string.length;
+    let candidate = string.substr(from, this.text.length);
+    if (candidate === this.text) {
+      return from + this.text.length;
     } else {
       return -1;
     }

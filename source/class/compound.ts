@@ -29,7 +29,7 @@ export class Compound implements Generatable {
   }
 
   public match(string: string, from: number, zatlin: Zatlin): number {
-    if (this.exclusion !== undefined) {
+    if (this.exclusion === undefined) {
       return this.generatable.match(string, from, zatlin);
     } else {
       throw new ZatlinError(9009, "Cannot happen (at Compound#match)");
@@ -43,7 +43,7 @@ export class Compound implements Generatable {
   private testExclusion(string: string, zatlin: Zatlin): boolean {
     if (this.exclusion !== undefined) {
       for (let from = 0 ; from <= string.length ; from ++) {
-        if (this.exclusion.match(string, from, zatlin)) {
+        if (this.exclusion.match(string, from, zatlin) >= 0) {
           return true;
         }
       }

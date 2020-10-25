@@ -28,7 +28,12 @@ import {
 export class Parsers {
 
   public static zatlin: Parser<Zatlin> = lazy(() => {
-    let parser = Parsers.sentences.map((sentences) => new Zatlin(sentences));
+    let parser = seq(
+      Parsers.blankOrBreak,
+      Parsers.sentences,
+      Parsers.blankOrBreak,
+      Parsimmon.eof
+    ).map(([, sentences]) => new Zatlin(sentences));
     return parser;
   });
 
