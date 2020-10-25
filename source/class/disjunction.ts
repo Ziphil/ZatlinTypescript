@@ -78,7 +78,7 @@ export class Disjunction implements Generatable {
 
   public toString(): string {
     let string = "";
-    string += `(${this.weightedGeneratables.join(" | ")})`;
+    string += `(${this.weightedGeneratables.map(([generatable, weight]) => `${generatable} ${weight}`).join(" | ")})`;
     return string;
   }
 

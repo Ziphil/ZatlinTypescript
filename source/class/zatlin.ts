@@ -6,6 +6,9 @@ import {
   Identifier,
   ZatlinError
 } from ".";
+import {
+  Parsers
+} from "../parser/parsers";
 
 
 export class Zatlin {
@@ -13,13 +16,29 @@ export class Zatlin {
   private readonly definitions: ReadonlyArray<Definition>;
   private readonly mainGeneratable?: Generatable;
 
-  public constructor(definitions: Array<Definition>, mainGeneratable: Generatable) {
+  public constructor(sentences: Array<Sentence>) {
+    let definitions = [];
+    let mainGeneratable;
+    for (let sentence of sentences) {
+      if (sentence instanceof Definition) {
+        definitions.push(sentence);
+      } else {
+        if (mainGeneratable === undefined) {
+          mainGeneratable = sentence;
+        } else {
+          throw new ZatlinError(1009, "There are multiple main patterns");
+        }
+      }
+    }
+    if (mainGeneratable === undefined) {
+      throw new ZatlinError(1009, "There is no main pattern");
+    }
     this.definitions = definitions;
     this.mainGeneratable = mainGeneratable;
   }
 
   public static load(source: string): Zatlin {
-    let zatlin = undefined as any;
+    let zatlin = Parsers.zatlin.tryParse(source);
     return zatlin;
   }
 
@@ -53,4 +72,22 @@ export class Zatlin {
     return this.definitions.findIndex((definition) => definition.identifier.equals(identifier)) >= 0;
   }
 
+  public toString(): string {
+    let string = "";
+    if (this.definitions.length > 0) {
+      string += "definitions:\n";
+      for (let definition of this.definitions) {
+        string += `  ${definition}\n`;
+      }
+    }
+    if (this.mainGeneratable) {
+      string += "main:\n";
+      string += `  % ${this.mainGeneratable}\n`;
+    }
+    return string;
+  }
+
 }
+
+
+export type Sentence = Definition | Generatable;
