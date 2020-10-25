@@ -14,7 +14,7 @@ import {
 export class Zatlin {
 
   private readonly definitions: ReadonlyArray<Definition>;
-  private readonly mainGeneratable?: Generatable;
+  private readonly mainGeneratable: Generatable;
 
   public constructor(sentences: Array<Sentence>) {
     let definitions = [];
@@ -60,23 +60,22 @@ export class Zatlin {
     }
   }
 
-  // 識別子定義文でモジュール内に存在しない識別子を参照していないかチェックします。
+  // 存在しない識別子を参照していないかチェックします。
   private checkUnknownIdentifier(): void {
-    for (let definition of this.definitions) {
-      let identifier = definition.findUnknownIdentifier(this);
+    let generatables = [...this.definitions, this.mainGeneratable];
+    for (let generatable of generatables) {
+      let identifier = generatable.findUnknownIdentifier(this);
       if (identifier !== undefined) {
-        throw new ZatlinError(1100, `Unresolved identifier: '${identifier.text}' in '${definition}'`);
+        throw new ZatlinError(1100, `Unresolved identifier: '${identifier.text}' in '${generatable}'`);
       }
     }
   }
 
-  // 識別子定義文で識別子が循環参照していないかチェックします。
+  // 識別子が循環参照していないかチェックします。
   private checkCircularIdentifier(): void {
-    for (let definition of this.definitions) {
-      let identifier = definition.findCircularIdentifier([], this);
-      if (identifier !== undefined) {
-        throw new ZatlinError(1101, `Circular reference involving identifier: '${identifier.text}' in '${definition}'`);
-      }
+    let identifier = this.mainGeneratable.findCircularIdentifier([], this);
+    if (identifier !== undefined) {
+      throw new ZatlinError(1101, `Circular reference involving identifier: '${identifier.text}'`);
     }
   }
 
