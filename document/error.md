@@ -27,6 +27,14 @@ bar = "a" | "b";
 ### 1102: `Duplicate definition of identifier: 'xxx'`
 Identifiers with the same name are defined multiple times.
 
+### 1103: `Invalid exclusion pattern: 'xxx'`
+There are an invalid expression in an exclusion pattern.
+Any identifiers in an exclusion pattern cannot have themselves an exclusion pattern.
+```
+with_exclusion = "a" | "b" | "c" - "c";
+% "a" "b" - with_exclusion;  # error occurs
+```
+
 ## Run-time errors
 ### 2000: `Possibly empty`
 The processor cannot generate an output which matches the specified pattern.

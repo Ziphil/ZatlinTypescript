@@ -45,6 +45,7 @@ export class Zatlin {
     this.mainGeneratable = mainGeneratable;
     this.checkUnknownIdentifier();
     this.checkCircularIdentifier();
+    this.checkValid();
   }
 
   public static load(source: string): Zatlin {
@@ -76,6 +77,16 @@ export class Zatlin {
       let identifier = definition.findCircularIdentifier([], this);
       if (identifier !== undefined) {
         throw new ZatlinError(1101, `Circular reference involving identifier: '${identifier.text}' in '${definition}'`);
+      }
+    }
+  }
+
+  private checkValid(): void {
+    let generatables = [...this.definitions.map((definition) => definition.content), this.mainGeneratable!];
+    for (let generatable of generatables) {
+      let valid = generatable.isValid(this);
+      if (!valid) {
+        throw new ZatlinError(1103, `Invalid exclusion pattern: '${generatable}'`);
       }
     }
   }

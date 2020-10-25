@@ -32,6 +32,10 @@ export class Quote implements Generatable {
     return true;
   }
 
+  public isValid(zatlin: Zatlin): boolean {
+    return true;
+  }
+
   public findUnknownIdentifier(zatlin: Zatlin): Identifier | undefined {
     return undefined;
   }

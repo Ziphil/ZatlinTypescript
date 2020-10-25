@@ -15,7 +15,10 @@ export interface Generatable {
   // マッチしなかった場合は -1 を返します。
   match(string: string, from: number, zatlin: Zatlin): number;
 
+  // このオブジェクトがマッチ可能 (除外設定に置いて良い) ならば true を返し、そうでなければ false を返します。
   isMatchable(zatlin: Zatlin): boolean;
+
+  isValid(zatlin: Zatlin): boolean;
 
   // 存在しない識別子を含んでいればそれを返し、そうでなければ undefined を返します。
   findUnknownIdentifier(zatlin: Zatlin): Identifier | undefined;

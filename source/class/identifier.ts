@@ -45,6 +45,10 @@ export class Identifier implements Generatable {
     }
   }
 
+  public isValid(zatlin: Zatlin): boolean {
+    return true;
+  }
+
   public findUnknownIdentifier(zatlin: Zatlin): Identifier | undefined {
     if (!zatlin.hasDefinition(this)) {
       return this;

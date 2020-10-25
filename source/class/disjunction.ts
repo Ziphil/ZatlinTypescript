@@ -52,6 +52,16 @@ export class Disjunction implements Generatable {
     return true;
   }
 
+  public isValid(zatlin: Zatlin): boolean {
+    for (let [generatable] of this.weightedGeneratables) {
+      let matchable = generatable.isValid(zatlin);
+      if (!matchable) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   public findUnknownIdentifier(zatlin: Zatlin): Identifier | undefined {
     for (let [generatable] of this.weightedGeneratables) {
       let identifier = generatable.findUnknownIdentifier(zatlin);

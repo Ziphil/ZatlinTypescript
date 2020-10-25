@@ -176,6 +176,18 @@ describe("errors", () => {
       expect(error.code).toBe(1102);
     }
   });
+  test("invalid exclusion pattern", () => {
+    expect.assertions(2);
+    try {
+      let zatlin = Zatlin.load(`
+        with_exclusion = "x" | "y" | "z" - "x";
+        % "a" "b" - with_exclusion;
+      `);
+    } catch (error) {
+      expect(error.name).toBe("ZatlinError");
+      expect(error.code).toBe(1103);
+    }
+  });
   test("possibly empty 1", () => {
     expect.assertions(2);
     try {

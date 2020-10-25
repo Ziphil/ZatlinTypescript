@@ -37,7 +37,11 @@ export class Compound implements Generatable {
   }
 
   public isMatchable(zatlin: Zatlin): boolean {
-    return this.generatable.isMatchable(zatlin) && this.exclusion === undefined;
+    return this.exclusion === undefined && this.generatable.isMatchable(zatlin);
+  }
+
+  public isValid(zatlin: Zatlin): boolean {
+    return this.exclusion === undefined || this.exclusion.isMatchable(zatlin);
   }
 
   private testExclusion(string: string, zatlin: Zatlin): boolean {

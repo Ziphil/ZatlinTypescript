@@ -50,6 +50,16 @@ export class Sequence implements Generatable {
     return true;
   }
 
+  public isValid(zatlin: Zatlin): boolean {
+    for (let generatable of this.generatables) {
+      let matchable = generatable.isMatchable(zatlin);
+      if (!matchable) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   public findUnknownIdentifier(zatlin: Zatlin): Identifier | undefined {
     for (let generatable of this.generatables) {
       let identifier = generatable.findUnknownIdentifier(zatlin);
