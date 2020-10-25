@@ -110,8 +110,8 @@ export class Parsers {
   });
 
   private static sequenceElement: Parser<Generatable> = lazy(() => {
-    let disjunctionParser = Parsers.disjunction.thru(Parsers.parened);
-    let parser = alt(Parsers.quote, Parsers.identifier, disjunctionParser);
+    let compoundParser = Parsers.compound.thru(Parsers.parened);
+    let parser = alt(Parsers.quote, Parsers.identifier, compoundParser);
     return parser;
   });
 
