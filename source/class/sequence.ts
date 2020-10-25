@@ -1,17 +1,20 @@
 //
 
 import {
-  Generatable,
   Identifier,
   Zatlin
 } from ".";
+import {
+  Generatable
+} from "./generatable";
 
 
-export class Sequence implements Generatable {
+export class Sequence extends Generatable {
 
   private readonly generatables: ReadonlyArray<Generatable>;
 
   public constructor(generatables: Array<Generatable>) {
+    super();
     this.generatables = generatables;
   }
 

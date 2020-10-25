@@ -1,17 +1,20 @@
 //
 
 import {
-  Generatable,
   Identifier,
   Zatlin
 } from ".";
+import {
+  Generatable
+} from "./generatable";
 
 
-export class Circumflex implements Generatable {
+export class Circumflex extends Generatable {
 
   public readonly leading: boolean;
 
   public constructor(leading: boolean) {
+    super();
     this.leading = leading;
   }
 

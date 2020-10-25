@@ -1,19 +1,22 @@
 //
 
 import {
-  Generatable,
   Identifier,
   Zatlin,
   ZatlinError
 } from ".";
+import {
+  Generatable
+} from "./generatable";
 
 
-export class Compound implements Generatable {
+export class Compound extends Generatable {
 
   private readonly generatable: Generatable;
   private readonly exclusion?: Generatable;
 
   public constructor(generatable: Generatable, exclusion?: Generatable) {
+    super();
     this.generatable = generatable;
     this.exclusion = exclusion;
   }
@@ -21,7 +24,7 @@ export class Compound implements Generatable {
   public generate(zatlin: Zatlin): string {
     for (let i = 0 ; i < 100 ; i ++) {
       let output = this.generatable.generate(zatlin);
-      if (!this.testExclusion(output, zatlin)) {
+      if (this.exclusion === undefined || !this.exclusion.test(output, zatlin)) {
         return output;
       }
     }
@@ -42,19 +45,6 @@ export class Compound implements Generatable {
 
   public isValid(zatlin: Zatlin): boolean {
     return this.exclusion === undefined || this.exclusion.isMatchable(zatlin);
-  }
-
-  private testExclusion(string: string, zatlin: Zatlin): boolean {
-    if (this.exclusion !== undefined) {
-      for (let from = 0 ; from <= string.length ; from ++) {
-        if (this.exclusion.match(string, from, zatlin) >= 0) {
-          return true;
-        }
-      }
-      return false;
-    } else {
-      return false;
-    }
   }
 
   public findUnknownIdentifier(zatlin: Zatlin): Identifier | undefined {

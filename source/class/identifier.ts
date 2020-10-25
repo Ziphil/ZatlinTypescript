@@ -1,17 +1,20 @@
 //
 
 import {
-  Generatable,
   Zatlin,
   ZatlinError
 } from ".";
+import {
+  Generatable
+} from "./generatable";
 
 
-export class Identifier implements Generatable {
+export class Identifier extends Generatable {
 
   public readonly text: string;
 
   public constructor(text: string) {
+    super();
     this.text = text;
   }
 

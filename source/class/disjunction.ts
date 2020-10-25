@@ -1,18 +1,21 @@
 //
 
 import {
-  Generatable,
   Identifier,
   Zatlin,
   ZatlinError
 } from ".";
+import {
+  Generatable
+} from "./generatable";
 
 
-export class Disjunction implements Generatable {
+export class Disjunction extends Generatable {
 
   private readonly weightedGeneratables: ReadonlyArray<Weighted<Generatable>>;
 
   public constructor(weightedGeneratables: Array<Weighted<Generatable>>) {
+    super();
     this.weightedGeneratables = weightedGeneratables;
   }
 
