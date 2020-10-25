@@ -31,6 +31,15 @@ describe("normal", () => {
       (output) => output !== "b"
     );
   });
+  test("nested exclusion", () => {
+    let zatlin = Zatlin.load(`
+      % "a" | "b" | "c" - ("b" | "c" - "c");
+    `);
+    repeat(zatlin, 20,
+      (output) => output === "a" || output === "c",
+      (output) => output !== "b"
+    );
+  });
   test("simple with circumflex", () => {
     let zatlin = Zatlin.load(`
       % "aa" | "ab" | "ba" | "bb" - ^ "b" | "a" ^;
@@ -174,18 +183,6 @@ describe("errors", () => {
     } catch (error) {
       expect(error.name).toBe("ZatlinError");
       expect(error.code).toBe(1102);
-    }
-  });
-  test("invalid exclusion pattern", () => {
-    expect.assertions(2);
-    try {
-      let zatlin = Zatlin.load(`
-        with_exclusion = "x" | "y" | "z" - "x";
-        % "a" "b" - with_exclusion;
-      `);
-    } catch (error) {
-      expect(error.name).toBe("ZatlinError");
-      expect(error.code).toBe(1103);
     }
   });
   test("possibly empty 1", () => {

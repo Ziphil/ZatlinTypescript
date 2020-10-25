@@ -32,19 +32,24 @@ export class Compound extends Generatable {
   }
 
   public match(string: string, from: number, zatlin: Zatlin): number {
-    if (this.exclusion === undefined) {
-      return this.generatable.match(string, from, zatlin);
+    let to = this.generatable.match(string, from, zatlin);
+    if (to >= 0) {
+      if (this.exclusion !== undefined && this.exclusion.test(string.substring(from, to), zatlin)) {
+        return -1;
+      } else {
+        return to;
+      }
     } else {
-      throw new ZatlinError(9004, "Cannot happen (at Compound#match)");
+      return -1;
     }
   }
 
   public isMatchable(zatlin: Zatlin): boolean {
-    return this.exclusion === undefined && this.generatable.isMatchable(zatlin);
+    return true;
   }
 
   public isValid(zatlin: Zatlin): boolean {
-    return this.exclusion === undefined || this.exclusion.isMatchable(zatlin);
+    return true;
   }
 
   public findUnknownIdentifier(zatlin: Zatlin): Identifier | undefined {
