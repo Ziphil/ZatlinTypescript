@@ -10,7 +10,7 @@ import {
 
 export class Circumflex implements Generatable, Matchable {
 
-  public leading: boolean;
+  public readonly leading: boolean;
 
   public constructor(leading: boolean) {
     this.leading = leading;

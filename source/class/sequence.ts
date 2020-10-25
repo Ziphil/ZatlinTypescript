@@ -9,7 +9,7 @@ import {
 
 export class Sequence implements Generatable {
 
-  private generatables: Array<Generatable>;
+  private readonly generatables: ReadonlyArray<Generatable>;
 
   public constructor(generatables: Array<Generatable>) {
     this.generatables = generatables;

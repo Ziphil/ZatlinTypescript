@@ -9,7 +9,7 @@ import {
 
 export class Quote implements Generatable {
 
-  public text: string;
+  public readonly text: string;
 
   public constructor(text: string) {
     this.text = text;

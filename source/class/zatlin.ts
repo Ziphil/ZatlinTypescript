@@ -10,8 +10,13 @@ import {
 
 export class Zatlin {
 
-  private definitions: Array<Definition> = [];
-  private mainGeneratable?: Generatable;
+  private readonly definitions: ReadonlyArray<Definition>;
+  private readonly mainGeneratable?: Generatable;
+
+  public constructor(definitions: Array<Definition>, mainGeneratable: Generatable) {
+    this.definitions = definitions;
+    this.mainGeneratable = mainGeneratable;
+  }
 
   public static load(source: string): Zatlin {
     let zatlin = undefined as any;

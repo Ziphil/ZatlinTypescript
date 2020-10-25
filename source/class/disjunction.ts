@@ -10,9 +10,9 @@ import {
 
 export class Disjunction implements Generatable {
 
-  private weightedGeneratables: Array<WeightedGeneratable>;
+  private readonly weightedGeneratables: ReadonlyArray<Weighted<Generatable>>;
 
-  public constructor(weightedGeneratables: Array<WeightedGeneratable>) {
+  public constructor(weightedGeneratables: Array<Weighted<Generatable>>) {
     this.weightedGeneratables = weightedGeneratables;
   }
 
@@ -61,4 +61,4 @@ export class Disjunction implements Generatable {
 }
 
 
-export type WeightedGeneratable = [Generatable, number];
+export type Weighted<T> = readonly [T, number];

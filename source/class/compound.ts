@@ -11,8 +11,8 @@ import {
 
 export class Compound implements Generatable {
 
-  private generatable: Generatable;
-  private matchable?: Matchable;
+  private readonly generatable: Generatable;
+  private readonly matchable?: Matchable;
 
   public constructor(generatable: Generatable, matchable?: Matchable) {
     this.generatable = generatable;

@@ -9,7 +9,7 @@ import {
 
 export class Identifier implements Generatable {
 
-  public text: string;
+  public readonly text: string;
 
   public constructor(text: string) {
     this.text = text;

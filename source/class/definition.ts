@@ -9,8 +9,8 @@ import {
 
 export class Definition {
 
-  public identifier: Identifier;
-  public content: Generatable;
+  public readonly identifier: Identifier;
+  public readonly content: Generatable;
 
   public constructor(identifier: Identifier, content: Generatable) {
     this.identifier = identifier;
