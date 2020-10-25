@@ -14,7 +14,7 @@ There are multiple main patterns defined.
 ### 1100: `Unresolved identifier: 'xxx' in 'xxx'`
 An undefined identifier is used in a definition.
 
-### 1101: `Circular reference involving identifier: 'xxx' in 'xxx'`
+### 1101: `Circular reference involving identifier: 'xxx'`
 There is a circular reference of identifiers.
 Since this may cause an infinite loop at run-time, the processor reports it as an error beforehand.
 ```
@@ -22,7 +22,9 @@ foo = bar | circular;  # error occurs
 circular = bar | baz;  # foo -> circular -> baz -> foo
 baz = foo;
 bar = "a" | "b";
+% foo;
 ```
+Note that, if a circular reference is inside unused identifiers, no errors will occur.
 
 ### 1102: `Duplicate definition of identifier: 'xxx'`
 Identifiers with the same name are defined multiple times.
@@ -41,15 +43,15 @@ The processor cannot generate an output which matches the specified pattern.
 This most likely occurs when the possible outputs are all excluded by the exclusion pattern:
 ```
 % "ab" | "ac" | "bc" - ^ "a" | "c" ^
-# every possible output ("ab" or "ac" or "bc") either starts with "a" or ends with "c"
-# but such patterns are all specified to be excluded from the output
-# thus the processor cannot generate anything
+# Every possible output (“ab” or “ac” or “bc”) either starts with “a” or ends with “c”.
+# Such patterns are all specified to be excluded from the output.
+# Thus the processor cannot generate anything.
 ```
 Since the processor tries to generate a string only 100 times for each pattern, if the probability of the possible output is very low, this error may occur:
 ```
 % "a" 1000000 | "b" 1 - "a";
-# theoretically this pattern can output "b"
-# but its probability is very low
+# Theoretically this pattern can output “b”, but its probability is very low.
+# Thus this pattern almost always fails to output a string.
 ```
 
 ## Other errors
