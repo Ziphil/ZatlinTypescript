@@ -29,13 +29,9 @@ Note that, if a circular reference is inside unused identifiers, no errors will 
 ### 1102: `Duplicate definition of identifier: 'xxx'`
 Identifiers with the same name are defined multiple times.
 
-### 1103: `Invalid exclusion pattern: 'xxx'`
-There are an invalid expression in an exclusion pattern.
-Any identifiers in an exclusion pattern cannot have themselves an exclusion pattern.
-```
-with_exclusion = "a" | "b" | "c" - "c";
-% "a" "b" - with_exclusion;  # error occurs
-```
+### 1104: `Total weight is zero: 'xxx'`
+The total weight of a pattern is zero.
+Such pattern cannot produce any string, so the processor throws an error.
 
 ## Run-time errors
 ### 2000: `Possibly empty`

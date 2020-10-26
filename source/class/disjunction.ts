@@ -13,10 +13,15 @@ import {
 export class Disjunction extends Generatable {
 
   private readonly weightedGeneratables: ReadonlyArray<Weighted<Generatable>>;
+  private readonly totalWeight: number;
 
   public constructor(weightedGeneratables: Array<Weighted<Generatable>>) {
     super();
     this.weightedGeneratables = weightedGeneratables;
+    this.totalWeight = weightedGeneratables.reduce((totalWeight, [, weight]) => totalWeight + weight, 0);
+    if (this.totalWeight <= 0) {
+      throw new ZatlinError(1104, `Total weight is zero: '${this}'`);
+    }
   }
 
   public generate(zatlin: Zatlin): string {
@@ -24,7 +29,7 @@ export class Disjunction extends Generatable {
     let currentWeight = 0;
     for (let [generatable, weight] of this.weightedGeneratables) {
       currentWeight += weight;
-      if (number < currentWeight) {
+      if (weight > 0 && number < currentWeight) {
         return generatable.generate(zatlin);
       }
     }
@@ -33,10 +38,12 @@ export class Disjunction extends Generatable {
 
   public match(string: string, from: number, zatlin: Zatlin): number {
     if (this.weightedGeneratables.length > 0) {
-      for (let [generatable] of this.weightedGeneratables) {
-        let to = generatable.match(string, from, zatlin);
-        if (to >= 0) {
-          return to;
+      for (let [generatable, weight] of this.weightedGeneratables) {
+        if (weight > 0) {
+          let to = generatable.match(string, from, zatlin);
+          if (to >= 0) {
+            return to;
+          }
         }
       }
       return -1;
@@ -83,10 +90,6 @@ export class Disjunction extends Generatable {
       }
     }
     return undefined;
-  }
-
-  public get totalWeight(): number {
-    return this.weightedGeneratables.reduce((totalWeight, [, weight]) => totalWeight + weight, 0);
   }
 
   public toString(): string {
