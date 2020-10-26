@@ -14,9 +14,9 @@ import {
   Disjunction,
   Generatable,
   Identifier,
+  Quote,
   Sentence,
   Sequence,
-  Quote,
   Weighted,
   Zatlin
 } from "../class";
