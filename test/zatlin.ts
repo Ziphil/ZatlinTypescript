@@ -42,10 +42,10 @@ describe("normal", () => {
   });
   test("exclusion with probability zero", () => {
     let zatlin = Zatlin.load(`
-      % "a" | "b" | "c" - "b" 0;
+      % "a" | "b" | "c" - ("b" | "c" 0);
     `);
     repeat(zatlin, 20,
-      (output) => output === "a" || output === "b" || output === "c"
+      (output) => output === "a" || output === "c"
     );
   });
   test("simple with circumflex", () => {
@@ -191,6 +191,17 @@ describe("errors", () => {
     } catch (error) {
       expect(error.name).toBe("ZatlinError");
       expect(error.code).toBe(1102);
+    }
+  });
+  test("zero total weight", () => {
+    expect.assertions(2);
+    try {
+      let zatlin = Zatlin.load(`
+        % "a" 0 | "b" 0 | "c" 0;
+      `);
+    } catch (error) {
+      expect(error.name).toBe("ZatlinError");
+      expect(error.code).toBe(1104);
     }
   });
   test("possibly empty 1", () => {
