@@ -40,6 +40,14 @@ describe("normal", () => {
       (output) => output !== "b"
     );
   });
+  test("exclusion with probability zero", () => {
+    let zatlin = Zatlin.load(`
+      % "a" | "b" | "c" - "b" 0;
+    `);
+    repeat(zatlin, 20,
+      (output) => output === "a" || output === "b" || output === "c"
+    );
+  });
   test("simple with circumflex", () => {
     let zatlin = Zatlin.load(`
       % "aa" | "ab" | "ba" | "bb" - ^ "b" | "a" ^;
