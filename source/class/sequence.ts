@@ -11,9 +11,9 @@ import {
 
 export class Sequence extends Generatable {
 
-  private readonly generatables: ReadonlyArray<Generatable<Array<string>, Array<string>>>;
+  private readonly generatables: ReadonlyArray<SequenceGeneratable>;
 
-  public constructor(generatables: Array<Generatable<Array<string>, Array<string>>>) {
+  public constructor(generatables: Array<SequenceGeneratable>) {
     super();
     this.generatables = generatables;
   }
@@ -37,6 +37,7 @@ export class Sequence extends Generatable {
         let to = matchable.match(string, pointer, zatlin, previousMatches);
         if (to >= 0) {
           previousMatches.push(string.substring(pointer, to));
+
           pointer = to;
         } else {
           return -1;
@@ -95,3 +96,6 @@ export class Sequence extends Generatable {
   }
 
 }
+
+
+export type SequenceGeneratable = Generatable<Array<string>, Array<string>>;

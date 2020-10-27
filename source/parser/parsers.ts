@@ -17,6 +17,7 @@ import {
   Quote,
   Sentence,
   Sequence,
+  SequenceGeneratable,
   Weighted,
   Zatlin
 } from "../class";
@@ -99,7 +100,7 @@ export class Parsers {
     let parser = seq(
       Parsers.leadingCircumflex.times(0, 1).map((result) => result[0]),
       Parsers.blank,
-      Parsers.sequenceElement.sepBy1(Parsers.blank),
+      Parsers.sequenceGeneratable.sepBy1(Parsers.blank),
       Parsers.blank,
       Parsers.trailingCircumflex.times(0, 1).map((result) => result[0])
     ).map(([leadingCircumflex, , sequenceElements, , trailingCircumflex]) => {
@@ -109,7 +110,7 @@ export class Parsers {
     return parser;
   });
 
-  private static sequenceElement: Parser<Generatable> = lazy(() => {
+  private static sequenceGeneratable: Parser<SequenceGeneratable> = lazy(() => {
     let compoundParser = Parsers.compound.thru(Parsers.parened);
     let parser = alt(Parsers.quote, Parsers.identifier, compoundParser);
     return parser;
