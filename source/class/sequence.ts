@@ -11,17 +11,20 @@ import {
 
 export class Sequence extends Generatable {
 
-  private readonly generatables: ReadonlyArray<Generatable>;
+  private readonly generatables: ReadonlyArray<Generatable<Array<string>, Array<string>>>;
 
-  public constructor(generatables: Array<Generatable>) {
+  public constructor(generatables: Array<Generatable<Array<string>, Array<string>>>) {
     super();
     this.generatables = generatables;
   }
 
   public generate(zatlin: Zatlin): string {
     let output = "";
+    let previousOutputs = [];
     for (let generatable of this.generatables) {
-      output += generatable.generate(zatlin);
+      let currentOutput = generatable.generate(zatlin, previousOutputs);
+      previousOutputs.push(currentOutput);
+      output += currentOutput;
     }
     return output;
   }
@@ -29,9 +32,11 @@ export class Sequence extends Generatable {
   public match(string: string, from: number, zatlin: Zatlin): number {
     if (this.generatables.length > 0) {
       let pointer = from;
+      let previousMatches = [];
       for (let matchable of this.generatables) {
-        let to = matchable.match(string, pointer, zatlin);
+        let to = matchable.match(string, pointer, zatlin, previousMatches);
         if (to >= 0) {
+          previousMatches.push(string.substring(pointer, to));
           pointer = to;
         } else {
           return -1;
