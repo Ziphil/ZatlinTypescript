@@ -56,7 +56,7 @@ export class Zatlin {
     if (this.mainGeneratable !== undefined) {
       return this.mainGeneratable.generate(this);
     } else {
-      throw new ZatlinError(9005, "Cannot happen (at Zatlin#generate)");
+      throw new ZatlinError(9004, "Cannot happen (at Zatlin#generate)");
     }
   }
 
