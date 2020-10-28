@@ -74,6 +74,27 @@ describe("normal", () => {
       (output) => output === "a" || output === "b" || output === "c"
     );
   });
+  test("backref 1", () => {
+    let zatlin = Zatlin.load(`
+      char = "a" | "b" | "c";
+      % char &1 char &3;
+    `);
+    repeat(zatlin, 20,
+      (output) => output.length === 4,
+      (output) => output.charAt(0) === output.charAt(1),
+      (output) => output.charAt(2) === output.charAt(3)
+    );
+  });
+  test("backref 2", () => {
+    let zatlin = Zatlin.load(`
+      char = "a" | "b" | "c";
+      % char char char - char &1 | char char &1;
+    `);
+    repeat(zatlin, 20,
+      (output) => output.length === 3,
+      (output) => new Set(output.split("")).size === 3
+    );
+  });
   test("comment", () => {
     let zatlin = Zatlin.load(`
       char = "a" | "b" | "c"#comment
@@ -204,6 +225,28 @@ describe("errors", () => {
       expect(error.code).toBe(1104);
     }
   });
+  test("invalid backref 1", () => {
+    expect.assertions(2);
+    try {
+      let zatlin = Zatlin.load(`
+        % "a" &1 "b" &4;
+      `);
+    } catch (error) {
+      expect(error.name).toBe("ZatlinError");
+      expect(error.code).toBe(1105);
+    }
+  });
+  test("invalid backref 2", () => {
+    expect.assertions(2);
+    try {
+      let zatlin = Zatlin.load(`
+        % "a" "b" &0;
+      `);
+    } catch (error) {
+      expect(error.name).toBe("ZatlinError");
+      expect(error.code).toBe(1105);
+    }
+  });
   test("possibly empty 1", () => {
     expect.assertions(2);
     try {
@@ -226,6 +269,19 @@ describe("errors", () => {
     } catch (error) {
       expect(error.name).toBe("ZatlinError");
       expect(error.code).toBe(2000);
+    }
+  });
+  test("no identifier", () => {
+    expect.assertions(2);
+    try {
+      let zatlin = Zatlin.load(`
+        foo = "a" | "b"; bar = "x" | "y";
+        % foo;
+      `);
+      zatlin.generate("baz");
+    } catch (error) {
+      expect(error.name).toBe("ZatlinError");
+      expect(error.code).toBe(2001);
     }
   });
 });

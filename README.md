@@ -8,7 +8,7 @@
 
 ## Overview
 Zatlin is a domain-specific language to generate words of a constructed langauge.
-This package serves a TypeScript implementation of Zatlin 1.1.
+This package serves a TypeScript implementation of Zatlin.
 
 ## Installation
 Install via [npm](https://www.npmjs.com/package/zatlin).
@@ -25,11 +25,23 @@ let zatlin = Zatlin.load(`% "a" | "b" | "c";`);
 let output = zatlin.generate();
 console.log(output);
 ```
+If an identifier name is passed to `generate` method, the processor generates a string from the specified identifier.
+```javascript
+const {Zatlin} = require("zatlin");
+
+let zatlin = Zatlin.load(`
+  foo = "a" | "b" ; bar = "x" | "y";
+  % "p" | "q" ;
+`);
+let output = zatlin.generate("bar");
+console.log(output);  // outputs “x” or “y”
+```
 
 ## Documentations
 ### Syntax
 - Version 1.0
-- Version 1.1: [日本語](document/syntax.md)
+- Version 1.1: [日本語](document/syntax/1.1-ja.md)
+- Version 1.2: [日本語](document/syntax/1.2-ja.md)
 
 ### Error messages
 - [Error messages](document/error.md)
@@ -40,4 +52,4 @@ First note that the version of this package and that of Zatlin implemented in it
 Zatlin 1.0 is the first version of Zatlin, and implemented in the desktop version of ZpDIC.
 There is also a self-contained Java implementation [here](https://github.com/Ziphil/Zatlin).
 
-Zatlin 1.1 is a enhanced version whose syntax is more powerful, and implemented in this package.
+Zatlin 1.1 and 1.2 is a enhanced version whose syntax is more powerful, and implemented in this package.

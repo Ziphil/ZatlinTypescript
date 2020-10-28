@@ -1,8 +1,10 @@
 //
 
 import {
+  Backref,
   Identifier,
-  Zatlin
+  Zatlin,
+  ZatlinError
 } from ".";
 import {
   Generatable
@@ -11,17 +13,21 @@ import {
 
 export class Sequence extends Generatable {
 
-  private readonly generatables: ReadonlyArray<Generatable>;
+  private readonly generatables: ReadonlyArray<SequenceGeneratable>;
 
-  public constructor(generatables: Array<Generatable>) {
+  public constructor(generatables: Array<SequenceGeneratable>) {
     super();
     this.generatables = generatables;
+    this.checkBackref();
   }
 
   public generate(zatlin: Zatlin): string {
     let output = "";
+    let previousOutputs = [];
     for (let generatable of this.generatables) {
-      output += generatable.generate(zatlin);
+      let currentOutput = generatable.generate(zatlin, previousOutputs);
+      previousOutputs.push(currentOutput);
+      output += currentOutput;
     }
     return output;
   }
@@ -29,9 +35,11 @@ export class Sequence extends Generatable {
   public match(string: string, from: number, zatlin: Zatlin): number {
     if (this.generatables.length > 0) {
       let pointer = from;
+      let previousMatches = [];
       for (let matchable of this.generatables) {
-        let to = matchable.match(string, pointer, zatlin);
+        let to = matchable.match(string, pointer, zatlin, previousMatches);
         if (to >= 0) {
+          previousMatches.push(string.substring(pointer, to));
           pointer = to;
         } else {
           return -1;
@@ -63,6 +71,17 @@ export class Sequence extends Generatable {
     return true;
   }
 
+  private checkBackref(): void {
+    for (let index = 0 ; index < this.generatables.length ; index ++) {
+      let generatable = this.generatables[index];
+      if (generatable instanceof Backref) {
+        if (!(generatable.index >= 0 && generatable.index < index)) {
+          throw new ZatlinError(1105, `Index of backreference is invalid: '${generatable}' in '${this}'`);
+        }
+      }
+    }
+  }
+
   public findUnknownIdentifier(zatlin: Zatlin): Identifier | undefined {
     for (let generatable of this.generatables) {
       let identifier = generatable.findUnknownIdentifier(zatlin);
@@ -90,3 +109,6 @@ export class Sequence extends Generatable {
   }
 
 }
+
+
+export type SequenceGeneratable = Generatable<Array<string>, Array<string>>;
