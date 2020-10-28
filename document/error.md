@@ -57,6 +57,9 @@ Since the processor tries to generate a string only 100 times for each pattern, 
 # Thus this pattern almost always fails to output a string.
 ```
 
+### 2001: `No such identifier: 'xxx'`
+You specified a particular identifier name as a starting point, but there is no such identifier defined.
+
 ## Other errors
 ### 90xx: `Cannot happen (at xxx)`
 This error cannot occur if the processor runs as intended.

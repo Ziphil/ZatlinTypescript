@@ -271,4 +271,17 @@ describe("errors", () => {
       expect(error.code).toBe(2000);
     }
   });
+  test("no identifier", () => {
+    expect.assertions(2);
+    try {
+      let zatlin = Zatlin.load(`
+        foo = "a" | "b"; bar = "x" | "y";
+        % foo;
+      `);
+      zatlin.generate("baz");
+    } catch (error) {
+      expect(error.name).toBe("ZatlinError");
+      expect(error.code).toBe(2001);
+    }
+  });
 });

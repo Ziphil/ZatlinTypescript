@@ -52,12 +52,20 @@ export class Zatlin {
     return zatlin;
   }
 
-  public generate(): string {
-    if (this.mainGeneratable !== undefined) {
-      return this.mainGeneratable.generate(this);
-    } else {
-      throw new ZatlinError(9004, "Cannot happen (at Zatlin#generate)");
-    }
+  public generate(identifierName?: string): string {
+    let generatable = (() => {
+      if (identifierName !== undefined) {
+        let generatable = this.findContent(new Identifier(identifierName));
+        if (generatable !== undefined) {
+          return generatable;
+        } else {
+          throw new ZatlinError(2001, `No such identifier: '${identifierName}'`);
+        }
+      } else {
+        return this.mainGeneratable;
+      }
+    })();
+    return generatable.generate(this);
   }
 
   // 存在しない識別子を参照していないかチェックします。
