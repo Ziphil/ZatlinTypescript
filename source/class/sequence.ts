@@ -37,7 +37,6 @@ export class Sequence extends Generatable {
         let to = matchable.match(string, pointer, zatlin, previousMatches);
         if (to >= 0) {
           previousMatches.push(string.substring(pointer, to));
-
           pointer = to;
         } else {
           return -1;
