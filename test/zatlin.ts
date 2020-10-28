@@ -225,6 +225,28 @@ describe("errors", () => {
       expect(error.code).toBe(1104);
     }
   });
+  test("invalid backref 1", () => {
+    expect.assertions(2);
+    try {
+      let zatlin = Zatlin.load(`
+        % "a" &1 "b" &4;
+      `);
+    } catch (error) {
+      expect(error.name).toBe("ZatlinError");
+      expect(error.code).toBe(1105);
+    }
+  });
+  test("invalid backref 2", () => {
+    expect.assertions(2);
+    try {
+      let zatlin = Zatlin.load(`
+        % "a" "b" &0;
+      `);
+    } catch (error) {
+      expect(error.name).toBe("ZatlinError");
+      expect(error.code).toBe(1105);
+    }
+  });
   test("possibly empty 1", () => {
     expect.assertions(2);
     try {

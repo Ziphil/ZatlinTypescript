@@ -1,8 +1,10 @@
 //
 
 import {
+  Backref,
   Identifier,
-  Zatlin
+  Zatlin,
+  ZatlinError
 } from ".";
 import {
   Generatable
@@ -16,6 +18,7 @@ export class Sequence extends Generatable {
   public constructor(generatables: Array<SequenceGeneratable>) {
     super();
     this.generatables = generatables;
+    this.checkBackref();
   }
 
   public generate(zatlin: Zatlin): string {
@@ -66,6 +69,17 @@ export class Sequence extends Generatable {
       }
     }
     return true;
+  }
+
+  private checkBackref(): void {
+    for (let index = 0 ; index < this.generatables.length ; index ++) {
+      let generatable = this.generatables[index];
+      if (generatable instanceof Backref) {
+        if (!(generatable.index >= 0 && generatable.index < index)) {
+          throw new ZatlinError(1105, `Index of backreference is invalid: '${generatable}' in '${this}'`);
+        }
+      }
+    }
   }
 
   public findUnknownIdentifier(zatlin: Zatlin): Identifier | undefined {
