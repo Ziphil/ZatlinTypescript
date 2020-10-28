@@ -74,6 +74,27 @@ describe("normal", () => {
       (output) => output === "a" || output === "b" || output === "c"
     );
   });
+  test("backref 1", () => {
+    let zatlin = Zatlin.load(`
+      char = "a" | "b" | "c";
+      % char &1 char &3;
+    `);
+    repeat(zatlin, 20,
+      (output) => output.length === 4,
+      (output) => output.charAt(0) === output.charAt(1),
+      (output) => output.charAt(2) === output.charAt(3)
+    );
+  });
+  test("backref 2", () => {
+    let zatlin = Zatlin.load(`
+      char = "a" | "b" | "c";
+      % char char char - char &1 | char char &1;
+    `);
+    repeat(zatlin, 20,
+      (output) => output.length === 3,
+      (output) => new Set(output.split("")).size === 3
+    );
+  });
   test("comment", () => {
     let zatlin = Zatlin.load(`
       char = "a" | "b" | "c"#comment

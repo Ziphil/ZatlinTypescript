@@ -8,6 +8,7 @@ import {
   seq
 } from "parsimmon";
 import {
+  Backref,
   Circumflex,
   Compound,
   Definition,
@@ -112,7 +113,7 @@ export class Parsers {
 
   private static sequenceGeneratable: Parser<SequenceGeneratable> = lazy(() => {
     let compoundParser = Parsers.compound.thru(Parsers.parened);
-    let parser = alt(Parsers.quote, Parsers.identifier, compoundParser);
+    let parser = alt(Parsers.quote, Parsers.backref, Parsers.identifier, compoundParser);
     return parser;
   });
 
@@ -143,6 +144,15 @@ export class Parsers {
 
   private static quoteContent: Parser<string> = lazy(() => {
     let parser = Parsimmon.noneOf("\\\"");
+    return parser;
+  });
+
+  private static backref: Parser<Backref> = lazy(() => {
+    let indexParser = Parsimmon.regexp(/\d+/).map((string) => parseInt(string));
+    let parser = seq(
+      Parsimmon.string("&"),
+      indexParser
+    ).map(([, index]) => new Backref(index - 1));
     return parser;
   });
 
