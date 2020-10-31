@@ -46,15 +46,16 @@ The processor cannot generate an output which matches the specified pattern.
 This most likely occurs when the possible outputs are all excluded by the exclusion pattern:
 ```
 % "ab" | "ac" | "bc" - ^ "a" | "c" ^
-# Every possible output (“ab” or “ac” or “bc”) either starts with “a” or ends with “c”.
-# Such patterns are all specified to be excluded from the output.
-# Thus the processor cannot generate anything.
+# every possible output (“ab” or “ac” or “bc”) either starts with “a” or ends with “c”
+# such patterns are all specified to be excluded from the output
+# thus the processor cannot generate anything
 ```
 Since the processor tries to generate a string only 100 times for each pattern, if the probability of the possible output is very low, this error may occur:
 ```
 % "a" 1000000 | "b" 1 - "a";
-# Theoretically this pattern can output “b”, but its probability is very low.
-# Thus this pattern almost always fails to output a string.
+# theoretically this pattern can output “b”
+# but its probability is very low
+# thus this pattern almost always fails to output a string
 ```
 
 ### 2001: `No such identifier: 'xxx'`
