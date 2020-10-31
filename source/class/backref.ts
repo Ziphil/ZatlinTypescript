@@ -59,7 +59,7 @@ export class Backref extends Generatable<Array<string>, Array<string>> {
   }
 
   public toString(): string {
-    return `&${this.index}`;
+    return `&${this.index + 1}`;
   }
 
 }
