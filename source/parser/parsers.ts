@@ -22,9 +22,6 @@ import {
   Weighted,
   Zatlin
 } from "../class";
-import {
-  attempt
-} from "./util";
 
 
 export class Parsers {
@@ -72,13 +69,14 @@ export class Parsers {
 
   private static compound: Parser<Compound> = lazy(() => {
     let exclusionParser = seq(
-      Parsimmon.string("-").trim(Parsers.blank),
+      seq(Parsimmon.string("-"), Parsers.blank),
       Parsers.disjunction
     ).map(([, disjunction]) => disjunction);
     let parser = seq(
       Parsers.disjunction,
-      exclusionParser.thru(attempt).times(0, 1).map((result) => result[0])
-    ).map(([disjunction, exclusion]) => new Compound(disjunction, exclusion));
+      Parsers.blank,
+      exclusionParser.times(0, 1).map((result) => result[0])
+    ).map(([disjunction, , exclusion]) => new Compound(disjunction, exclusion));
     return parser;
   });
 
