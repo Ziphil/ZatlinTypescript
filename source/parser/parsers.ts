@@ -33,7 +33,6 @@ export class Parsers {
     let parser = seq(
       Parsers.blankOrBreak,
       Parsers.sentences,
-      Parsers.blankOrBreak,
       Parsimmon.eof
     ).map(([, sentences]) => new Zatlin(sentences));
     return parser;
@@ -175,12 +174,12 @@ export class Parsers {
     return parser;
   });
 
-  // 文末の (省略されているかもしれない) セミコロンおよびその後の (改行を含む) スペースをパースします。
+  // 文末の (省略されているかもしれない) セミコロンおよびその後の改行を含むスペースをパースします。
   private static semicolon: Parser<null> = lazy(() => {
     let semicolonParser = seq(Parsimmon.string(";"), Parsers.blankOrBreak);
     let breakParser = seq(Parsers.break, Parsers.blankOrBreak);
-    let otherParser = Parsimmon.lookahead(alt(Parsimmon.string("#"), Parsimmon.eof));
-    let parser = alt(semicolonParser, breakParser, otherParser).result(null);
+    let commentParser = Parsers.comment;
+    let parser = alt(semicolonParser, breakParser, commentParser).result(null);
     return parser;
   });
 
@@ -200,7 +199,10 @@ export class Parsers {
   });
 
   private static blankOrBreak: Parser<null> = lazy(() => {
-    let parser = Parsimmon.regexp(/\s*/).result(null);
+    let parser = seq(
+      Parsimmon.regexp(/\s*/),
+      Parsimmon.eof.times(0, 1)
+    ).result(null);
     return parser;
   });
 
@@ -210,7 +212,7 @@ export class Parsers {
   });
 
   private static break: Parser<null> = lazy(() => {
-    let parser = Parsimmon.string("\n").result(null);
+    let parser = alt(Parsimmon.string("\n"), Parsimmon.eof).result(null);
     return parser;
   });
 
