@@ -1,14 +1,14 @@
 //
 
 import {
+  Parsers
+} from "../parser/parsers";
+import {
   Definition,
   Generatable,
   Identifier,
   ZatlinError
 } from ".";
-import {
-  Parsers
-} from "../parser/parsers";
 
 
 export class Zatlin {
