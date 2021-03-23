@@ -1,8 +1,8 @@
 //
 
 import {
-  Parsers
-} from "../parser/parsers";
+  ZatlinParser
+} from "../parser/parser";
 import {
   Definition,
   Generatable,
@@ -48,7 +48,8 @@ export class Zatlin {
   }
 
   public static load(source: string): Zatlin {
-    let zatlin = Parsers.zatlin.tryParse(source);
+    let parser = new ZatlinParser();
+    let zatlin = parser.tryParse(source);
     return zatlin;
   }
 

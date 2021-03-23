@@ -24,83 +24,90 @@ import {
 } from "../class";
 
 
-export class Parsers {
+export class ZatlinParser {
 
-  public static zatlin: Parser<Zatlin> = lazy(() => {
+  public constructor() {
+  }
+
+  public tryParse(input: string): Zatlin {
+    return this.root.tryParse(input);
+  }
+
+  public root: Parser<Zatlin> = lazy(() => {
     let parser = seq(
-      Parsers.blankOrBreak,
-      Parsers.sentences,
+      this.blankOrBreak,
+      this.sentences,
       Parsimmon.eof
     ).map(([, sentences]) => new Zatlin(sentences));
     return parser;
   });
 
-  private static sentences: Parser<Array<Sentence>> = lazy(() => {
-    let parser = Parsers.sentence.atLeast(1).map((sentences) => {
+  private sentences: Parser<Array<Sentence>> = lazy(() => {
+    let parser = this.sentence.atLeast(1).map((sentences) => {
       let filteredSentences = sentences.filter((sentence) => sentence !== null) as Array<Sentence>;
       return filteredSentences;
     });
     return parser;
   });
 
-  private static sentence: Parser<Sentence | null> = lazy(() => {
-    let parser = alt(Parsers.definition, Parsers.mainGeneratable, Parsers.comment);
+  private sentence: Parser<Sentence | null> = lazy(() => {
+    let parser = alt(this.definition, this.mainGeneratable, this.comment);
     return parser;
   });
 
-  private static definition: Parser<Definition> = lazy(() => {
+  private definition: Parser<Definition> = lazy(() => {
     let parser = seq(
-      Parsers.identifier,
-      Parsimmon.string("=").trim(Parsers.blank),
-      Parsers.compound,
-      seq(Parsers.blank, Parsers.semicolon)
+      this.identifier,
+      Parsimmon.string("=").trim(this.blank),
+      this.compound,
+      seq(this.blank, this.semicolon)
     ).map(([identifier, , content]) => new Definition(identifier, content));
     return parser;
   });
 
-  private static mainGeneratable: Parser<Generatable> = lazy(() => {
+  private mainGeneratable: Parser<Generatable> = lazy(() => {
     let parser = seq(
-      seq(Parsimmon.string("%"), Parsers.blank),
-      Parsers.compound,
-      seq(Parsers.blank, Parsers.semicolon)
+      seq(Parsimmon.string("%"), this.blank),
+      this.compound,
+      seq(this.blank, this.semicolon)
     ).map(([, generatable]) => generatable);
     return parser;
   });
 
-  private static compound: Parser<Compound> = lazy(() => {
+  private compound: Parser<Compound> = lazy(() => {
     let exclusionParser = seq(
-      seq(Parsimmon.string("-"), Parsers.blank),
-      Parsers.disjunction
+      seq(Parsimmon.string("-"), this.blank),
+      this.disjunction
     ).map(([, disjunction]) => disjunction);
     let parser = seq(
-      Parsers.disjunction,
-      Parsers.blank,
+      this.disjunction,
+      this.blank,
       exclusionParser.times(0, 1).map((result) => result[0])
     ).map(([disjunction, , exclusion]) => new Compound(disjunction, exclusion));
     return parser;
   });
 
-  private static disjunction: Parser<Disjunction> = lazy(() => {
-    let parser = Parsers.weightedSequence.sepBy1(Parsimmon.string("|").trim(Parsers.blank)).map((weightedSequences) => new Disjunction(weightedSequences));
+  private disjunction: Parser<Disjunction> = lazy(() => {
+    let parser = this.weightedSequence.sepBy1(Parsimmon.string("|").trim(this.blank)).map((weightedSequences) => new Disjunction(weightedSequences));
     return parser;
   });
 
-  private static weightedSequence: Parser<Weighted<Sequence>> = lazy(() => {
+  private weightedSequence: Parser<Weighted<Sequence>> = lazy(() => {
     let parser = seq(
-      Parsers.sequence,
-      Parsers.blank,
-      Parsers.weight.times(0, 1).map((result) => result[0])
+      this.sequence,
+      this.blank,
+      this.weight.times(0, 1).map((result) => result[0])
     ).map(([sequence, , weight]) => [sequence, weight ?? 1] as const);
     return parser;
   });
 
-  private static sequence: Parser<Sequence> = lazy(() => {
+  private sequence: Parser<Sequence> = lazy(() => {
     let parser = seq(
-      Parsers.leadingCircumflex.times(0, 1).map((result) => result[0]),
-      Parsers.blank,
-      Parsers.sequenceGeneratable.sepBy1(Parsers.blank),
-      Parsers.blank,
-      Parsers.trailingCircumflex.times(0, 1).map((result) => result[0])
+      this.leadingCircumflex.times(0, 1).map((result) => result[0]),
+      this.blank,
+      this.sequenceGeneratable.sepBy1(this.blank),
+      this.blank,
+      this.trailingCircumflex.times(0, 1).map((result) => result[0])
     ).map(([leadingCircumflex, , sequenceElements, , trailingCircumflex]) => {
       let generatables = [leadingCircumflex, ...sequenceElements, trailingCircumflex].filter((generatable) => generatable !== undefined);
       return new Sequence(generatables);
@@ -108,22 +115,22 @@ export class Parsers {
     return parser;
   });
 
-  private static sequenceGeneratable: Parser<SequenceGeneratable> = lazy(() => {
-    let compoundParser = Parsers.compound.thru(Parsers.parened);
-    let parser = alt(Parsers.quote, Parsers.backref, Parsers.identifier, compoundParser);
+  private sequenceGeneratable: Parser<SequenceGeneratable> = lazy(() => {
+    let compoundParser = this.compound.thru(this.parened.bind(this));
+    let parser = alt(this.quote, this.backref, this.identifier, compoundParser);
     return parser;
   });
 
-  private static quote: Parser<Quote> = lazy(() => {
+  private quote: Parser<Quote> = lazy(() => {
     let parser = seq(
       Parsimmon.string("\""),
-      alt(Parsers.quoteEscape, Parsers.quoteContent).many().tie(),
+      alt(this.quoteEscape, this.quoteContent).many().tie(),
       Parsimmon.string("\"")
     ).map(([, text]) => new Quote(text));
     return parser;
   });
 
-  private static quoteEscape: Parser<string> = lazy(() => {
+  private quoteEscape: Parser<string> = lazy(() => {
     let parser = seq(
       Parsimmon.string("\\"),
       alt(Parsimmon.regexp(/u[A-Fa-f0-9]{4}/), Parsimmon.oneOf("\\\""))
@@ -139,12 +146,12 @@ export class Parsers {
     return parser;
   });
 
-  private static quoteContent: Parser<string> = lazy(() => {
+  private quoteContent: Parser<string> = lazy(() => {
     let parser = Parsimmon.noneOf("\\\"");
     return parser;
   });
 
-  private static backref: Parser<Backref> = lazy(() => {
+  private backref: Parser<Backref> = lazy(() => {
     let indexParser = Parsimmon.regexp(/\d+/).map((string) => parseInt(string));
     let parser = seq(
       Parsimmon.string("&"),
@@ -153,50 +160,50 @@ export class Parsers {
     return parser;
   });
 
-  private static leadingCircumflex: Parser<Circumflex> = lazy(() => {
+  private leadingCircumflex: Parser<Circumflex> = lazy(() => {
     let parser = Parsimmon.string("^").result(new Circumflex(true));
     return parser;
   });
 
-  private static trailingCircumflex: Parser<Circumflex> = lazy(() => {
+  private trailingCircumflex: Parser<Circumflex> = lazy(() => {
     let parser = Parsimmon.string("^").result(new Circumflex(false));
     return parser;
   });
 
-  private static comment: Parser<null> = lazy(() => {
+  private comment: Parser<null> = lazy(() => {
     let parser = seq(
       Parsimmon.string("#"),
       Parsimmon.noneOf("\n").many(),
-      Parsers.blankOrBreak
+      this.blankOrBreak
     ).result(null);
     return parser;
   });
 
   // 文末の (省略されているかもしれない) セミコロンおよびその後の改行を含むスペースをパースします。
-  private static semicolon: Parser<null> = lazy(() => {
-    let semicolonParser = seq(Parsimmon.string(";"), Parsers.blankOrBreak);
-    let breakParser = seq(Parsers.break, Parsers.blankOrBreak);
-    let commentParser = Parsers.comment;
+  private semicolon: Parser<null> = lazy(() => {
+    let semicolonParser = seq(Parsimmon.string(";"), this.blankOrBreak);
+    let breakParser = seq(this.break, this.blankOrBreak);
+    let commentParser = this.comment;
     let parser = alt(semicolonParser, breakParser, commentParser).result(null);
     return parser;
   });
 
-  private static identifier: Parser<Identifier> = lazy(() => {
-    let parser = Parsers.identifierText.map((text) => new Identifier(text));
+  private identifier: Parser<Identifier> = lazy(() => {
+    let parser = this.identifierText.map((text) => new Identifier(text));
     return parser;
   });
 
-  private static identifierText: Parser<string> = lazy(() => {
+  private identifierText: Parser<string> = lazy(() => {
     let parser = Parsimmon.regexp(/[a-zA-Z][a-zA-Z0-9_]*/);
     return parser;
   });
 
-  private static weight: Parser<number> = lazy(() => {
+  private weight: Parser<number> = lazy(() => {
     let parser = Parsimmon.regexp(/\d+\.?\d*|\.\d+/).map((string) => parseFloat(string));
     return parser;
   });
 
-  private static blankOrBreak: Parser<null> = lazy(() => {
+  private blankOrBreak: Parser<null> = lazy(() => {
     let parser = seq(
       Parsimmon.regexp(/\s*/),
       Parsimmon.eof.times(0, 1)
@@ -204,19 +211,19 @@ export class Parsers {
     return parser;
   });
 
-  private static blank: Parser<null> = lazy(() => {
+  private blank: Parser<null> = lazy(() => {
     let parser = Parsimmon.regexp(/[^\S\n]*/).result(null);
     return parser;
   });
 
-  private static break: Parser<null> = lazy(() => {
+  private break: Parser<null> = lazy(() => {
     let parser = alt(Parsimmon.string("\n"), Parsimmon.eof).result(null);
     return parser;
   });
 
-  private static parened<T>(parser: Parser<T>): Parser<T> {
-    let leftParser = seq(Parsimmon.string("("), Parsers.blank);
-    let rightParser = seq(Parsers.blank, Parsimmon.string(")"));
+  private parened<T>(parser: Parser<T>): Parser<T> {
+    let leftParser = seq(Parsimmon.string("("), this.blank);
+    let rightParser = seq(this.blank, Parsimmon.string(")"));
     let wrappedParser = seq(leftParser, parser, rightParser).map((result) => result[1]);
     return wrappedParser;
   }
