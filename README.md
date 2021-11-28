@@ -5,7 +5,7 @@
 ![](https://img.shields.io/github/package-json/v/Ziphil/TypescriptZatlin)
 ![](https://img.shields.io/github/commit-activity/y/Ziphil/TypescriptZatlin?label=commits)
 ![](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FZiphil%2FTypescriptZatlin%2Fbadge%3Fref%3Ddevelop&label=test&style=flat&logo=none)
-![](https://img.shields.io/codecov/c/github/Ziphil/TypescriptZatlin)
+[![](https://img.shields.io/codecov/c/github/Ziphil/TypescriptZatlin)](https://app.codecov.io/gh/Ziphil/TypescriptZatlin)
 
 
 ## Overview
