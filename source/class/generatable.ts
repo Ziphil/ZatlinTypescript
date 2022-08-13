@@ -6,20 +6,18 @@ import {
 } from ".";
 
 
-export abstract class Generatable<C = undefined, D = undefined> {
+export abstract class Generatable<C = void, D = void> {
 
-  public abstract generate(...args: GenerateArgs<C>): string;
+  public abstract generate(zatlin: Zatlin, context: C): string;
 
   // ちょうど from で与えられた位置から右向きにマッチするかどうかを調べます。
   // マッチした場合はマッチした範囲の右端のインデックス (範囲にそのインデックス自体は含まない) を返します。
   // マッチしなかった場合は -1 を返します。
-  public abstract match(...args: MatchArgs<D>): number;
+  public abstract match(string: string, from: number, zatlin: Zatlin, context: D): number;
 
-  public test(...args: TestArgs<D>): boolean {
-    const [string, zatlin, context] = args;
+  public test(string: string, zatlin: Zatlin, context: D): boolean {
     for (let from = 0 ; from <= string.length ; from ++) {
-      const args = [string, from, zatlin, context] as MatchArgs<D>;
-      if (this.match(...args) >= 0) {
+      if (this.match(string, from, zatlin, context) >= 0) {
         return true;
       }
     }
@@ -39,8 +37,3 @@ export abstract class Generatable<C = undefined, D = undefined> {
   public abstract findCircularIdentifier(identifiers: Array<Identifier>, zatlin: Zatlin): Identifier | undefined;
 
 }
-
-
-type GenerateArgs<C> = C extends undefined ? [zatlin: Zatlin] : [zatlin: Zatlin, context: C];
-type MatchArgs<D> = D extends undefined ? [string: string, from: number, zatlin: Zatlin] : [string: string, from: number, zatlin: Zatlin, context: D];
-type TestArgs<D> = D extends undefined ? [string: string, zatlin: Zatlin] : [string: string, zatlin: Zatlin, context: D];

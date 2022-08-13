@@ -9,7 +9,7 @@ import {
 } from "./generatable";
 
 
-export class Circumflex extends Generatable {
+export class Circumflex extends Generatable<Array<string>, Array<string>> {
 
   public readonly leading: boolean;
 
