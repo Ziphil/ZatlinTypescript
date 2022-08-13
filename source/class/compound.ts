@@ -31,17 +31,15 @@ export class Compound extends Generatable {
     throw new ZatlinError(2000, "Possibly empty");
   }
 
-  public match(string: string, from: number, zatlin: Zatlin): number {
-    const to = this.generatable.match(string, from, zatlin);
-    if (to >= 0) {
-      if (this.exclusion !== undefined && this.exclusion.test(string.substring(from, to), zatlin)) {
-        return -1;
-      } else {
-        return to;
+  public match(string: string, from: number, zatlin: Zatlin): Array<number> {
+    const tos = this.generatable.match(string, from, zatlin);
+    const excludedTos = [];
+    for (const to of tos) {
+      if (this.exclusion === undefined || !this.exclusion.test(string.substring(from, to), zatlin)) {
+        excludedTos.push(to);
       }
-    } else {
-      return -1;
     }
+    return excludedTos;
   }
 
   public isMatchable(zatlin: Zatlin): boolean {

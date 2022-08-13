@@ -28,14 +28,14 @@ export class Backref extends Generatable<Array<string>, Array<string>> {
     }
   }
 
-  public match(string: string, from: number, zatlin: Zatlin, previousMatches: Array<string>): number {
+  public match(string: string, from: number, zatlin: Zatlin, previousMatches: Array<string>): [] | [number] {
     if (this.index >= 0 && this.index < previousMatches.length) {
       const match = previousMatches[this.index];
       const candidate = string.substr(from, match.length);
       if (candidate === match) {
-        return from + match.length;
+        return [from + match.length];
       } else {
-        return -1;
+        return [];
       }
     } else {
       throw new ZatlinError(9006, "Cannot happen (at Backref#match)");

@@ -32,23 +32,21 @@ export class Sequence extends Generatable {
     return output;
   }
 
-  public match(string: string, from: number, zatlin: Zatlin): number {
-    if (this.generatables.length > 0) {
-      let pointer = from;
-      const previousMatches = [];
-      for (const matchable of this.generatables) {
-        const to = matchable.match(string, pointer, zatlin, previousMatches);
-        if (to >= 0) {
-          previousMatches.push(string.substring(pointer, to));
-          pointer = to;
-        } else {
-          return -1;
-        }
+  public match(string: string, from: number, zatlin: Zatlin): Array<number> {
+    const matchRecursive = function (generatables: ReadonlyArray<SequenceGeneratable>, string: string, from: number, zatlin: Zatlin, previousMatches: Array<string>): Array<number> {
+      if (generatables.length > 0) {
+        const [generatable, ...nextGeneratables] = generatables;
+        const tos = generatable.match(string, from, zatlin, previousMatches);
+        const allTos = tos.flatMap((to) => {
+          const nextPreviousMatches = [...previousMatches, string.substring(from, to)];
+          return matchRecursive(nextGeneratables, string, to, zatlin, nextPreviousMatches);
+        });
+        return allTos;
+      } else {
+        return [from];
       }
-      return pointer;
-    } else {
-      return from;
-    }
+    };
+    return matchRecursive(this.generatables, string, from, zatlin, []);
   }
 
   public isMatchable(zatlin: Zatlin): boolean {

@@ -36,19 +36,18 @@ export class Disjunction extends Generatable {
     throw new ZatlinError(9003, "Cannot happen (at Disjunction#generate)");
   }
 
-  public match(string: string, from: number, zatlin: Zatlin): number {
+  public match(string: string, from: number, zatlin: Zatlin): Array<number> {
     if (this.weightedGeneratables.length > 0) {
+      const tos = [];
       for (const [generatable, weight] of this.weightedGeneratables) {
         if (weight > 0) {
-          const to = generatable.match(string, from, zatlin);
-          if (to >= 0) {
-            return to;
-          }
+          const eachTos = generatable.match(string, from, zatlin);
+          tos.push(...eachTos);
         }
       }
-      return -1;
+      return tos;
     } else {
-      return -1;
+      return [];
     }
   }
 

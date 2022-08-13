@@ -13,11 +13,12 @@ export abstract class Generatable<C = void, D = void> {
   // ちょうど from で与えられた位置から右向きにマッチするかどうかを調べます。
   // マッチした場合はマッチした範囲の右端のインデックス (範囲にそのインデックス自体は含まない) を返します。
   // マッチしなかった場合は -1 を返します。
-  public abstract match(string: string, from: number, zatlin: Zatlin, context: D): number;
+  public abstract match(string: string, from: number, zatlin: Zatlin, context: D): Array<number>;
 
   public test(string: string, zatlin: Zatlin, context: D): boolean {
     for (let from = 0 ; from <= string.length ; from ++) {
-      if (this.match(string, from, zatlin, context) >= 0) {
+      const tos = this.match(string, from, zatlin, context);
+      if (tos.length > 0) {
         return true;
       }
     }

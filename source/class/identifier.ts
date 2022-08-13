@@ -28,11 +28,11 @@ export class Identifier extends Generatable {
     }
   }
 
-  public match(string: string, from: number, zatlin: Zatlin): number {
+  public match(string: string, from: number, zatlin: Zatlin): Array<number> {
     const content = zatlin.findContent(this);
     if (content !== undefined) {
-      const to = content.match(string, from, zatlin);
-      return to;
+      const tos = content.match(string, from, zatlin);
+      return tos;
     } else {
       throw new ZatlinError(9001, "Cannot happen (at Identifier#match)");
     }
