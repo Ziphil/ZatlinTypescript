@@ -23,7 +23,7 @@ export class Quote extends Generatable {
   }
 
   public match(string: string, from: number, zatlin: Zatlin): [] | [number] {
-    const candidate = string.substr(from, this.text.length);
+    const candidate = string.substring(from, from + this.text.length);
     if (candidate === this.text) {
       return [from + this.text.length];
     } else {

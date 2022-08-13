@@ -136,7 +136,7 @@ export class ZatlinParser {
       alt(Parsimmon.regexp(/u[A-Fa-f0-9]{4}/), Parsimmon.oneOf("\\\""))
     ).map(([, escape]) => {
       if (escape.startsWith("u")) {
-        const code = parseInt(escape.substr(1, 4), 16);
+        const code = parseInt(escape.substring(1, 5), 16);
         const char = String.fromCharCode(code);
         return char;
       } else {

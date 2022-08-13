@@ -31,7 +31,7 @@ export class Backref extends Generatable<Array<string>, Array<string>> {
   public match(string: string, from: number, zatlin: Zatlin, previousMatches: Array<string>): [] | [number] {
     if (this.index >= 0 && this.index < previousMatches.length) {
       const match = previousMatches[this.index];
-      const candidate = string.substr(from, match.length);
+      const candidate = string.substring(from, from + match.length);
       if (candidate === match) {
         return [from + match.length];
       } else {
