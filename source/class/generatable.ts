@@ -11,8 +11,8 @@ export abstract class Generatable<C = void, D = void> {
   public abstract generate(zatlin: Zatlin, context: C): string;
 
   // ちょうど from で与えられた位置から右向きにマッチするかどうかを調べます。
-  // マッチした場合はマッチした範囲の右端のインデックス (範囲にそのインデックス自体は含まない) を返します。
-  // マッチしなかった場合は -1 を返します。
+  // マッチした場合はマッチした範囲の右端のインデックス (範囲にそのインデックス自体は含まない) の配列を返します。
+  // マッチしなかった場合は空配列を返します。
   public abstract match(string: string, from: number, zatlin: Zatlin, context: D): Array<number>;
 
   public test(string: string, zatlin: Zatlin, context: D): boolean {
