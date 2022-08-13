@@ -48,9 +48,34 @@ describe("normal", () => {
       (output) => output === "a" || output === "c"
     ]);
   });
-  test("simple with circumflex", () => {
+  test("exclusion with multiple matches 1", () => {
+    const zatlin = Zatlin.load(`
+      % "ac" | "abc" | "x" - ("a" | "ab") "c";
+    `);
+    repeat(zatlin, 20, [
+      (output) => output === "x"
+    ]);
+  });
+  test("exclusion with multiple matches 2", () => {
+    const zatlin = Zatlin.load(`
+      % "aa" | "abab" | "abcabc" | "x" - ^ ("a" | "ab" | "abc") &2 ^;
+    `);
+    console.log(zatlin.toString());
+    repeat(zatlin, 20, [
+      (output) => (console.log(output), output === "x")
+    ]);
+  });
+  test("simple with circumflex 1", () => {
     const zatlin = Zatlin.load(`
       % "aa" | "ab" | "ba" | "bb" - ^ "b" | "a" ^;
+    `);
+    repeat(zatlin, 20, [
+      (output) => output === "ab"
+    ]);
+  });
+  test("simple with circumflex 2", () => {
+    const zatlin = Zatlin.load(`
+      % "ac" | "bc" | "ab" - ^ ("a" | "b") "c" ^;
     `);
     repeat(zatlin, 20, [
       (output) => output === "ab"
