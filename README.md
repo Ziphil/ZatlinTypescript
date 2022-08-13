@@ -54,4 +54,4 @@ First note that the version of this package and that of Zatlin implemented in it
 Zatlin 1.0 is the first version of Zatlin, and implemented in the desktop version of ZpDIC.
 There is also a self-contained Java implementation [here](https://github.com/Ziphil/Zatlin).
 
-Zatlin 1.1 and 1.2 is a enhanced version whose syntax is more powerful, and implemented in this package.
+Zatlin 1.1 and 1.2 are enhanced versions whose syntax is more powerful, and implemented in this package.
