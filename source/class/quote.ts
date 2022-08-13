@@ -22,12 +22,12 @@ export class Quote extends Generatable {
     return this.text;
   }
 
-  public match(string: string, from: number, zatlin: Zatlin): number {
-    let candidate = string.substr(from, this.text.length);
+  public match(string: string, from: number, zatlin: Zatlin): [] | [number] {
+    const candidate = string.substring(from, from + this.text.length);
     if (candidate === this.text) {
-      return from + this.text.length;
+      return [from + this.text.length];
     } else {
-      return -1;
+      return [];
     }
   }
 

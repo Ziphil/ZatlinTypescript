@@ -9,7 +9,7 @@ import {
 } from "./generatable";
 
 
-export class Circumflex extends Generatable {
+export class Circumflex extends Generatable<Array<string>, Array<string>> {
 
   public readonly leading: boolean;
 
@@ -22,18 +22,18 @@ export class Circumflex extends Generatable {
     return "";
   }
 
-  public match(string: string, from: number, zatlin: Zatlin): number {
+  public match(string: string, from: number, zatlin: Zatlin): [] | [number] {
     if (this.leading) {
       if (from === 0) {
-        return from;
+        return [from];
       } else {
-        return -1;
+        return [];
       }
     } else {
       if (from === string.length) {
-        return from;
+        return [from];
       } else {
-        return -1;
+        return [];
       }
     }
   }
@@ -55,7 +55,7 @@ export class Circumflex extends Generatable {
   }
 
   public toString(): string {
-    return "^";
+    return this.leading ? "^[first]" : "^[last]";
   }
 
 }

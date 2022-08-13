@@ -4,7 +4,7 @@ import CodeMirror from "codemirror";
 import "codemirror/addon/mode/simple";
 
 
-let CodeMirrorAny = CodeMirror as any;
+const CodeMirrorAny = CodeMirror as any;
 
 CodeMirrorAny.defineSimpleMode("zatlin", {
   start: [

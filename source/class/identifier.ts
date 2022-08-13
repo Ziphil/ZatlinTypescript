@@ -19,29 +19,29 @@ export class Identifier extends Generatable {
   }
 
   public generate(zatlin: Zatlin): string {
-    let content = zatlin.findContent(this);
+    const content = zatlin.findContent(this);
     if (content !== undefined) {
-      let output = content.generate(zatlin);
+      const output = content.generate(zatlin);
       return output;
     } else {
       throw new ZatlinError(9000, "Cannot happen (at Identifier#generate)");
     }
   }
 
-  public match(string: string, from: number, zatlin: Zatlin): number {
-    let content = zatlin.findContent(this);
+  public match(string: string, from: number, zatlin: Zatlin): Array<number> {
+    const content = zatlin.findContent(this);
     if (content !== undefined) {
-      let to = content.match(string, from, zatlin);
-      return to;
+      const tos = content.match(string, from, zatlin);
+      return tos;
     } else {
       throw new ZatlinError(9001, "Cannot happen (at Identifier#match)");
     }
   }
 
   public isMatchable(zatlin: Zatlin): boolean {
-    let content = zatlin.findContent(this);
+    const content = zatlin.findContent(this);
     if (content !== undefined) {
-      let matchable = content.isMatchable(zatlin);
+      const matchable = content.isMatchable(zatlin);
       return matchable;
     } else {
       throw new ZatlinError(9002, "Cannot happen (at Identifier#isMatchable)");
@@ -61,11 +61,11 @@ export class Identifier extends Generatable {
   }
 
   public findCircularIdentifier(identifiers: Array<Identifier>, zatlin: Zatlin): Identifier | undefined {
-    let identifier = identifiers.find((identifier) => identifier.equals(this));
+    const identifier = identifiers.find((identifier) => identifier.equals(this));
     if (identifier !== undefined) {
       return identifier;
     } else {
-      let definition = zatlin.findDefinition(this);
+      const definition = zatlin.findDefinition(this);
       if (definition !== undefined) {
         return definition.findCircularIdentifier(identifiers, zatlin);
       } else {

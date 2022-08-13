@@ -4,6 +4,8 @@
 
 ![](https://img.shields.io/github/package-json/v/Ziphil/TypescriptZatlin)
 ![](https://img.shields.io/github/commit-activity/y/Ziphil/TypescriptZatlin?label=commits)
+![](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2FZiphil%2FTypescriptZatlin%2Fbadge%3Fref%3Ddevelop&label=test&style=flat&logo=none)
+[![](https://img.shields.io/codecov/c/github/Ziphil/TypescriptZatlin)](https://app.codecov.io/gh/Ziphil/TypescriptZatlin)
 
 
 ## Overview
@@ -52,4 +54,4 @@ First note that the version of this package and that of Zatlin implemented in it
 Zatlin 1.0 is the first version of Zatlin, and implemented in the desktop version of ZpDIC.
 There is also a self-contained Java implementation [here](https://github.com/Ziphil/Zatlin).
 
-Zatlin 1.1 and 1.2 is a enhanced version whose syntax is more powerful, and implemented in this package.
+Zatlin 1.1 and 1.2 are enhanced versions whose syntax is more powerful, and implemented in this package.

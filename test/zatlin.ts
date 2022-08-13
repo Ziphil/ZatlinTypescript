@@ -5,142 +5,167 @@ import {
 } from "../source/class";
 
 
-function repeat(zatlin: Zatlin, count: number, ...predicates: Array<(output: string) => unknown>): void {
+function repeat(zatlin: Zatlin, count: number, predicates: Array<(output: string) => unknown>): void {
   for (let i = 0 ; i < count ; i ++) {
-    let output = zatlin.generate();
-    let results = predicates.map((predicate) => !!predicate(output));
+    const output = zatlin.generate();
+    const results = predicates.map((predicate) => !!predicate(output));
     expect(results).not.toContain(false);
   }
 }
 
 describe("normal", () => {
   test("simple", () => {
-    let zatlin = Zatlin.load(`
+    const zatlin = Zatlin.load(`
       % "a" | "b" | "c";
     `);
-    repeat(zatlin, 20,
+    repeat(zatlin, 20, [
       (output) => output === "a" || output === "b" || output === "c"
-    );
+    ]);
   });
   test("simple with exclusion", () => {
-    let zatlin = Zatlin.load(`
+    const zatlin = Zatlin.load(`
       % "a" | "b" | "c" - "b";
     `);
-    repeat(zatlin, 20,
+    repeat(zatlin, 20, [
       (output) => output === "a" || output === "c",
       (output) => output !== "b"
-    );
+    ]);
   });
   test("nested exclusion", () => {
-    let zatlin = Zatlin.load(`
+    const zatlin = Zatlin.load(`
       % "a" | "b" | "c" - ("b" | "c" - "c");
     `);
-    repeat(zatlin, 20,
+    repeat(zatlin, 20, [
       (output) => output === "a" || output === "c",
       (output) => output !== "b"
-    );
+    ]);
   });
   test("exclusion with probability zero", () => {
-    let zatlin = Zatlin.load(`
+    const zatlin = Zatlin.load(`
       % "a" | "b" | "c" - ("b" | "c" 0);
     `);
-    repeat(zatlin, 20,
+    repeat(zatlin, 20, [
       (output) => output === "a" || output === "c"
-    );
+    ]);
   });
-  test("simple with circumflex", () => {
-    let zatlin = Zatlin.load(`
+  test("exclusion with multiple matches 1", () => {
+    const zatlin = Zatlin.load(`
+      % "ac" | "abc" | "x" - ("a" | "ab") "c";
+    `);
+    repeat(zatlin, 20, [
+      (output) => output === "x"
+    ]);
+  });
+  test("exclusion with multiple matches 2", () => {
+    const zatlin = Zatlin.load(`
+      % "aa" | "abab" | "abcabc" | "x" - ^ ("a" | "ab" | "abc") &2 ^;
+    `);
+    console.log(zatlin.toString());
+    repeat(zatlin, 20, [
+      (output) => (console.log(output), output === "x")
+    ]);
+  });
+  test("simple with circumflex 1", () => {
+    const zatlin = Zatlin.load(`
       % "aa" | "ab" | "ba" | "bb" - ^ "b" | "a" ^;
     `);
-    repeat(zatlin, 20,
+    repeat(zatlin, 20, [
       (output) => output === "ab"
-    );
+    ]);
+  });
+  test("simple with circumflex 2", () => {
+    const zatlin = Zatlin.load(`
+      % "ac" | "bc" | "ab" - ^ ("a" | "b") "c" ^;
+    `);
+    repeat(zatlin, 20, [
+      (output) => output === "ab"
+    ]);
   });
   test("zero probability", () => {
-    let zatlin = Zatlin.load(`
+    const zatlin = Zatlin.load(`
       % "a" 2 | "b" 0 | "c" 3;
     `);
-    repeat(zatlin, 20,
+    repeat(zatlin, 20, [
       (output) => output === "a" || output === "c",
       (output) => output !== "b"
-    );
+    ]);
   });
   test("identifier", () => {
-    let zatlin = Zatlin.load(`
+    const zatlin = Zatlin.load(`
       char = "a" | "b" | "c";
       % char;
     `);
-    repeat(zatlin, 20,
+    repeat(zatlin, 20, [
       (output) => output === "a" || output === "b" || output === "c"
-    );
+    ]);
   });
   test("backref 1", () => {
-    let zatlin = Zatlin.load(`
+    const zatlin = Zatlin.load(`
       char = "a" | "b" | "c";
       % char &1 char &3;
     `);
-    repeat(zatlin, 20,
+    repeat(zatlin, 20, [
       (output) => output.length === 4,
       (output) => output.charAt(0) === output.charAt(1),
       (output) => output.charAt(2) === output.charAt(3)
-    );
+    ]);
   });
   test("backref 2", () => {
-    let zatlin = Zatlin.load(`
+    const zatlin = Zatlin.load(`
       char = "a" | "b" | "c";
       % char char char - char &1 | char char &1;
     `);
-    repeat(zatlin, 20,
+    repeat(zatlin, 20, [
       (output) => output.length === 3,
       (output) => new Set(output.split("")).size === 3
-    );
+    ]);
   });
   test("comment", () => {
-    let zatlin = Zatlin.load(`
+    const zatlin = Zatlin.load(`
       char = "a" | "b" | "c"#comment
       # comment
       % char;  # comment
     `);
-    repeat(zatlin, 20,
+    repeat(zatlin, 20, [
       (output) => output === "a" || output === "b" || output === "c"
-    );
+    ]);
   });
   test("complex 1", () => {
-    let zatlin = Zatlin.load(`
+    const zatlin = Zatlin.load(`
       vowel = "a" | "e" | "i" | "o" | "u";
       cons = "s" | "t" | "k";
       % cons vowel cons;
     `);
-    repeat(zatlin, 50,
+    repeat(zatlin, 50, [
       (output) => output.length === 3,
       (output) => output.match(/^[stk][aeiou][stk]$/)
-    );
+    ]);
   });
   test("complex 2", () => {
-    let zatlin = Zatlin.load(`
+    const zatlin = Zatlin.load(`
       semivowel = "y" | "w";
       cons = "s" | "z" | semivowel 2;
       vowel = "a" | "e" | "i" | "o" | "u";
       % cons cons vowel cons - semivowel "i" | "y" ^;
     `);
-    repeat(zatlin, 50,
+    repeat(zatlin, 50, [
       (output) => output.length === 4,
       (output) => !output.includes("yi") && !output.includes("wi"),
       (output) => !output.endsWith("y")
-    );
+    ]);
   });
   test("complex 3", () => {
-    let zatlin = Zatlin.load(`
+    const zatlin = Zatlin.load(`
       vowel = "a" | "e" | "i" | "o" | "u";
       cons = "s" | "z" | "t" | "d" | "k" | "g";
       pattern = ("s" | "t" | "k") ("y" | "") vowel (vowel - "a" | "o") cons;
       % pattern - ^ "k" "y";
     `);
-    repeat(zatlin, 50,
+    repeat(zatlin, 50, [
       (output) => output.length === 5 || output.length === 4,
       (output) => output[output.length - 2].match(/^[eiu]$/),
       (output) => !output.startsWith("ky")
-    );
+    ]);
   });
 });
 
@@ -148,7 +173,7 @@ describe("errors", () => {
   test("no main pattern", () => {
     expect.assertions(2);
     try {
-      let zatlin = Zatlin.load(`
+      const zatlin = Zatlin.load(`
         foo = "a" | "b";
         bar = "c" | foo;
       `);
@@ -160,7 +185,7 @@ describe("errors", () => {
   test("multiple main patterns", () => {
     expect.assertions(2);
     try {
-      let zatlin = Zatlin.load(`
+      const zatlin = Zatlin.load(`
         % foo;
         foo = "a" | "b";
         bar = "c" | foo;
@@ -174,7 +199,7 @@ describe("errors", () => {
   test("unresolved identifier", () => {
     expect.assertions(2);
     try {
-      let zatlin = Zatlin.load(`
+      const zatlin = Zatlin.load(`
         foo = bar | undefined;
         bar = "a" | "b";
         % foo;
@@ -187,7 +212,7 @@ describe("errors", () => {
   test("circular identifier", () => {
     expect.assertions(2);
     try {
-      let zatlin = Zatlin.load(`
+      const zatlin = Zatlin.load(`
         foo = bar | circular;
         circular = bar | baz;
         baz = foo;
@@ -202,7 +227,7 @@ describe("errors", () => {
   test("duplicate identifier", () => {
     expect.assertions(2);
     try {
-      let zatlin = Zatlin.load(`
+      const zatlin = Zatlin.load(`
         foo = "a" | "b";
         bar = "c";
         baz = "d";
@@ -217,7 +242,7 @@ describe("errors", () => {
   test("zero total weight", () => {
     expect.assertions(2);
     try {
-      let zatlin = Zatlin.load(`
+      const zatlin = Zatlin.load(`
         % "a" 0 | "b" 0 | "c" 0;
       `);
     } catch (error) {
@@ -228,7 +253,7 @@ describe("errors", () => {
   test("invalid backref 1", () => {
     expect.assertions(2);
     try {
-      let zatlin = Zatlin.load(`
+      const zatlin = Zatlin.load(`
         % "a" &1 "b" &4;
       `);
     } catch (error) {
@@ -239,7 +264,7 @@ describe("errors", () => {
   test("invalid backref 2", () => {
     expect.assertions(2);
     try {
-      let zatlin = Zatlin.load(`
+      const zatlin = Zatlin.load(`
         % "a" "b" &0;
       `);
     } catch (error) {
@@ -250,7 +275,7 @@ describe("errors", () => {
   test("possibly empty 1", () => {
     expect.assertions(2);
     try {
-      let zatlin = Zatlin.load(`
+      const zatlin = Zatlin.load(`
         % "ab" | "ac" | "bc" - ^ "a" | "c" ^;
       `);
       zatlin.generate();
@@ -262,7 +287,7 @@ describe("errors", () => {
   test("possibly empty 2", () => {
     expect.assertions(2);
     try {
-      let zatlin = Zatlin.load(`
+      const zatlin = Zatlin.load(`
         % "a" 1000000 | "b" 1 - "a";
       `);
       zatlin.generate();
@@ -274,7 +299,7 @@ describe("errors", () => {
   test("no identifier", () => {
     expect.assertions(2);
     try {
-      let zatlin = Zatlin.load(`
+      const zatlin = Zatlin.load(`
         foo = "a" | "b"; bar = "x" | "y";
         % foo;
       `);
