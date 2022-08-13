@@ -5,7 +5,7 @@ import {
 } from "../source/class";
 
 
-function repeat(zatlin: Zatlin, count: number, ...predicates: Array<(output: string) => unknown>): void {
+function repeat(zatlin: Zatlin, count: number, predicates: Array<(output: string) => unknown>): void {
   for (let i = 0 ; i < count ; i ++) {
     const output = zatlin.generate();
     const results = predicates.map((predicate) => !!predicate(output));
@@ -18,73 +18,82 @@ describe("normal", () => {
     const zatlin = Zatlin.load(`
       % "a" | "b" | "c";
     `);
-    repeat(zatlin, 20,
-      (output) => output === "a" || output === "b" || output === "c");
+    repeat(zatlin, 20, [
+      (output) => output === "a" || output === "b" || output === "c"
+    ]);
   });
   test("simple with exclusion", () => {
     const zatlin = Zatlin.load(`
       % "a" | "b" | "c" - "b";
     `);
-    repeat(zatlin, 20,
+    repeat(zatlin, 20, [
       (output) => output === "a" || output === "c",
-      (output) => output !== "b");
+      (output) => output !== "b"
+    ]);
   });
   test("nested exclusion", () => {
     const zatlin = Zatlin.load(`
       % "a" | "b" | "c" - ("b" | "c" - "c");
     `);
-    repeat(zatlin, 20,
+    repeat(zatlin, 20, [
       (output) => output === "a" || output === "c",
-      (output) => output !== "b");
+      (output) => output !== "b"
+    ]);
   });
   test("exclusion with probability zero", () => {
     const zatlin = Zatlin.load(`
       % "a" | "b" | "c" - ("b" | "c" 0);
     `);
-    repeat(zatlin, 20,
-      (output) => output === "a" || output === "c");
+    repeat(zatlin, 20, [
+      (output) => output === "a" || output === "c"
+    ]);
   });
   test("simple with circumflex", () => {
     const zatlin = Zatlin.load(`
       % "aa" | "ab" | "ba" | "bb" - ^ "b" | "a" ^;
     `);
-    repeat(zatlin, 20,
-      (output) => output === "ab");
+    repeat(zatlin, 20, [
+      (output) => output === "ab"
+    ]);
   });
   test("zero probability", () => {
     const zatlin = Zatlin.load(`
       % "a" 2 | "b" 0 | "c" 3;
     `);
-    repeat(zatlin, 20,
+    repeat(zatlin, 20, [
       (output) => output === "a" || output === "c",
-      (output) => output !== "b");
+      (output) => output !== "b"
+    ]);
   });
   test("identifier", () => {
     const zatlin = Zatlin.load(`
       char = "a" | "b" | "c";
       % char;
     `);
-    repeat(zatlin, 20,
-      (output) => output === "a" || output === "b" || output === "c");
+    repeat(zatlin, 20, [
+      (output) => output === "a" || output === "b" || output === "c"
+    ]);
   });
   test("backref 1", () => {
     const zatlin = Zatlin.load(`
       char = "a" | "b" | "c";
       % char &1 char &3;
     `);
-    repeat(zatlin, 20,
+    repeat(zatlin, 20, [
       (output) => output.length === 4,
       (output) => output.charAt(0) === output.charAt(1),
-      (output) => output.charAt(2) === output.charAt(3));
+      (output) => output.charAt(2) === output.charAt(3)
+    ]);
   });
   test("backref 2", () => {
     const zatlin = Zatlin.load(`
       char = "a" | "b" | "c";
       % char char char - char &1 | char char &1;
     `);
-    repeat(zatlin, 20,
+    repeat(zatlin, 20, [
       (output) => output.length === 3,
-      (output) => new Set(output.split("")).size === 3);
+      (output) => new Set(output.split("")).size === 3
+    ]);
   });
   test("comment", () => {
     const zatlin = Zatlin.load(`
@@ -92,8 +101,9 @@ describe("normal", () => {
       # comment
       % char;  # comment
     `);
-    repeat(zatlin, 20,
-      (output) => output === "a" || output === "b" || output === "c");
+    repeat(zatlin, 20, [
+      (output) => output === "a" || output === "b" || output === "c"
+    ]);
   });
   test("complex 1", () => {
     const zatlin = Zatlin.load(`
@@ -101,9 +111,10 @@ describe("normal", () => {
       cons = "s" | "t" | "k";
       % cons vowel cons;
     `);
-    repeat(zatlin, 50,
+    repeat(zatlin, 50, [
       (output) => output.length === 3,
-      (output) => output.match(/^[stk][aeiou][stk]$/));
+      (output) => output.match(/^[stk][aeiou][stk]$/)
+    ]);
   });
   test("complex 2", () => {
     const zatlin = Zatlin.load(`
@@ -112,10 +123,11 @@ describe("normal", () => {
       vowel = "a" | "e" | "i" | "o" | "u";
       % cons cons vowel cons - semivowel "i" | "y" ^;
     `);
-    repeat(zatlin, 50,
+    repeat(zatlin, 50, [
       (output) => output.length === 4,
       (output) => !output.includes("yi") && !output.includes("wi"),
-      (output) => !output.endsWith("y"));
+      (output) => !output.endsWith("y")
+    ]);
   });
   test("complex 3", () => {
     const zatlin = Zatlin.load(`
@@ -124,10 +136,11 @@ describe("normal", () => {
       pattern = ("s" | "t" | "k") ("y" | "") vowel (vowel - "a" | "o") cons;
       % pattern - ^ "k" "y";
     `);
-    repeat(zatlin, 50,
+    repeat(zatlin, 50, [
       (output) => output.length === 5 || output.length === 4,
       (output) => output[output.length - 2].match(/^[eiu]$/),
-      (output) => !output.startsWith("ky"));
+      (output) => !output.startsWith("ky")
+    ]);
   });
 });
 
