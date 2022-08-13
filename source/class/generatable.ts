@@ -16,9 +16,9 @@ export abstract class Generatable<C = undefined, D = undefined> {
   public abstract match(...args: MatchArgs<D>): number;
 
   public test(...args: TestArgs<D>): boolean {
-    let [string, zatlin, context] = args;
+    const [string, zatlin, context] = args;
     for (let from = 0 ; from <= string.length ; from ++) {
-      let args = [string, from, zatlin, context] as MatchArgs<D>;
+      const args = [string, from, zatlin, context] as MatchArgs<D>;
       if (this.match(...args) >= 0) {
         return true;
       }

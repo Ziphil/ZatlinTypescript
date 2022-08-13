@@ -12,7 +12,7 @@ export class ZatlinError extends Error {
   }
 
   private static createMessage(code: number, shortMessage: string): string {
-    let message = `${code} | ${shortMessage}`;
+    const message = `${code} | ${shortMessage}`;
     return message;
   }
 

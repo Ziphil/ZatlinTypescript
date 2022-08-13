@@ -23,7 +23,7 @@ export class Compound extends Generatable {
 
   public generate(zatlin: Zatlin): string {
     for (let i = 0 ; i < 100 ; i ++) {
-      let output = this.generatable.generate(zatlin);
+      const output = this.generatable.generate(zatlin);
       if (this.exclusion === undefined || !this.exclusion.test(output, zatlin)) {
         return output;
       }
@@ -32,7 +32,7 @@ export class Compound extends Generatable {
   }
 
   public match(string: string, from: number, zatlin: Zatlin): number {
-    let to = this.generatable.match(string, from, zatlin);
+    const to = this.generatable.match(string, from, zatlin);
     if (to >= 0) {
       if (this.exclusion !== undefined && this.exclusion.test(string.substring(from, to), zatlin)) {
         return -1;

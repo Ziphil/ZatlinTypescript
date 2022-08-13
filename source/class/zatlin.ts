@@ -17,12 +17,12 @@ export class Zatlin {
   private readonly mainGeneratable: Generatable;
 
   public constructor(sentences: Array<Sentence>) {
-    let definitions = [];
+    const definitions = [];
     let mainGeneratable;
-    for (let sentence of sentences) {
+    for (const sentence of sentences) {
       if (sentence instanceof Definition) {
-        let duplicatedIndex = definitions.findIndex((definition) => {
-          let castSentence = sentence as Definition;
+        const duplicatedIndex = definitions.findIndex((definition) => {
+          const castSentence = sentence ;
           return definition.identifier.equals(castSentence.identifier);
         });
         if (duplicatedIndex < 0) {
@@ -48,15 +48,15 @@ export class Zatlin {
   }
 
   public static load(source: string): Zatlin {
-    let parser = new ZatlinParser();
-    let zatlin = parser.tryParse(source);
+    const parser = new ZatlinParser();
+    const zatlin = parser.tryParse(source);
     return zatlin;
   }
 
   public generate(identifierName?: string): string {
-    let generatable = (() => {
+    const generatable = (() => {
       if (identifierName !== undefined) {
-        let generatable = this.findContent(new Identifier(identifierName));
+        const generatable = this.findContent(new Identifier(identifierName));
         if (generatable !== undefined) {
           return generatable;
         } else {
@@ -71,9 +71,9 @@ export class Zatlin {
 
   // 存在しない識別子を参照していないかチェックします。
   private checkUnknownIdentifier(): void {
-    let generatables = [...this.definitions, this.mainGeneratable];
-    for (let generatable of generatables) {
-      let identifier = generatable.findUnknownIdentifier(this);
+    const generatables = [...this.definitions, this.mainGeneratable];
+    for (const generatable of generatables) {
+      const identifier = generatable.findUnknownIdentifier(this);
       if (identifier !== undefined) {
         throw new ZatlinError(1100, `Unresolved identifier: '${identifier.text}' in '${generatable}'`);
       }
@@ -82,7 +82,7 @@ export class Zatlin {
 
   // 識別子が循環参照していないかチェックします。
   private checkCircularIdentifier(): void {
-    let identifier = this.mainGeneratable.findCircularIdentifier([], this);
+    const identifier = this.mainGeneratable.findCircularIdentifier([], this);
     if (identifier !== undefined) {
       throw new ZatlinError(1101, `Circular reference involving identifier: '${identifier.text}'`);
     }
@@ -91,9 +91,9 @@ export class Zatlin {
   // メインパターンおよび識別子定義文の右辺のパターンにおいて、正当でないパターンが含まれていないかチェックします。
   // 当初の想定から仕様が変更されたことにより、現在は全ての可能なパターンが正当であるため、このメソッドを呼ぶ意味はありません。
   private checkValid(): void {
-    let generatables = [...this.definitions.map((definition) => definition.content), this.mainGeneratable!];
-    for (let generatable of generatables) {
-      let valid = generatable.isValid(this);
+    const generatables = [...this.definitions.map((definition) => definition.content), this.mainGeneratable];
+    for (const generatable of generatables) {
+      const valid = generatable.isValid(this);
       if (!valid) {
         throw new ZatlinError(1103, `Invalid exclusion pattern: '${generatable}'`);
       }
@@ -101,7 +101,7 @@ export class Zatlin {
   }
 
   public findDefinition(identifier: Identifier): Definition | undefined {
-    for (let definition of this.definitions) {
+    for (const definition of this.definitions) {
       if (definition.identifier.equals(identifier)) {
         return definition;
       }
@@ -110,7 +110,7 @@ export class Zatlin {
   }
 
   public findContent(identifier: Identifier): Generatable | undefined {
-    for (let definition of this.definitions) {
+    for (const definition of this.definitions) {
       if (definition.identifier.equals(identifier)) {
         return definition.content;
       }
@@ -126,7 +126,7 @@ export class Zatlin {
     let string = "";
     if (this.definitions.length > 0) {
       string += "definitions:\n";
-      for (let definition of this.definitions) {
+      for (const definition of this.definitions) {
         string += `  ${definition}\n`;
       }
     }

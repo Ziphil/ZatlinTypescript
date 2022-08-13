@@ -25,9 +25,9 @@ export class Disjunction extends Generatable {
   }
 
   public generate(zatlin: Zatlin): string {
-    let number = Math.random() * this.totalWeight;
+    const number = Math.random() * this.totalWeight;
     let currentWeight = 0;
-    for (let [generatable, weight] of this.weightedGeneratables) {
+    for (const [generatable, weight] of this.weightedGeneratables) {
       currentWeight += weight;
       if (weight > 0 && number < currentWeight) {
         return generatable.generate(zatlin);
@@ -38,9 +38,9 @@ export class Disjunction extends Generatable {
 
   public match(string: string, from: number, zatlin: Zatlin): number {
     if (this.weightedGeneratables.length > 0) {
-      for (let [generatable, weight] of this.weightedGeneratables) {
+      for (const [generatable, weight] of this.weightedGeneratables) {
         if (weight > 0) {
-          let to = generatable.match(string, from, zatlin);
+          const to = generatable.match(string, from, zatlin);
           if (to >= 0) {
             return to;
           }
@@ -53,8 +53,8 @@ export class Disjunction extends Generatable {
   }
 
   public isMatchable(zatlin: Zatlin): boolean {
-    for (let [generatable] of this.weightedGeneratables) {
-      let matchable = generatable.isMatchable(zatlin);
+    for (const [generatable] of this.weightedGeneratables) {
+      const matchable = generatable.isMatchable(zatlin);
       if (!matchable) {
         return false;
       }
@@ -63,8 +63,8 @@ export class Disjunction extends Generatable {
   }
 
   public isValid(zatlin: Zatlin): boolean {
-    for (let [generatable] of this.weightedGeneratables) {
-      let matchable = generatable.isValid(zatlin);
+    for (const [generatable] of this.weightedGeneratables) {
+      const matchable = generatable.isValid(zatlin);
       if (!matchable) {
         return false;
       }
@@ -73,8 +73,8 @@ export class Disjunction extends Generatable {
   }
 
   public findUnknownIdentifier(zatlin: Zatlin): Identifier | undefined {
-    for (let [generatable] of this.weightedGeneratables) {
-      let identifier = generatable.findUnknownIdentifier(zatlin);
+    for (const [generatable] of this.weightedGeneratables) {
+      const identifier = generatable.findUnknownIdentifier(zatlin);
       if (identifier !== undefined) {
         return identifier;
       }
@@ -83,8 +83,8 @@ export class Disjunction extends Generatable {
   }
 
   public findCircularIdentifier(identifiers: Array<Identifier>, zatlin: Zatlin): Identifier | undefined {
-    for (let [generatable] of this.weightedGeneratables) {
-      let identifier = generatable.findCircularIdentifier(identifiers, zatlin);
+    for (const [generatable] of this.weightedGeneratables) {
+      const identifier = generatable.findCircularIdentifier(identifiers, zatlin);
       if (identifier !== undefined) {
         return identifier;
       }

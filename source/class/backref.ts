@@ -21,7 +21,7 @@ export class Backref extends Generatable<Array<string>, Array<string>> {
 
   public generate(zatlin: Zatlin, previousOutputs: Array<string>): string {
     if (this.index >= 0 && this.index < previousOutputs.length) {
-      let output = previousOutputs[this.index];
+      const output = previousOutputs[this.index];
       return output;
     } else {
       throw new ZatlinError(9005, "Cannot happen (at Backref#generate)");
@@ -30,8 +30,8 @@ export class Backref extends Generatable<Array<string>, Array<string>> {
 
   public match(string: string, from: number, zatlin: Zatlin, previousMatches: Array<string>): number {
     if (this.index >= 0 && this.index < previousMatches.length) {
-      let match = previousMatches[this.index];
-      let candidate = string.substr(from, match.length);
+      const match = previousMatches[this.index];
+      const candidate = string.substr(from, match.length);
       if (candidate === match) {
         return from + match.length;
       } else {
