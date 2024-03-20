@@ -1,13 +1,7 @@
 //
 
-import {
-  Identifier,
-  Zatlin,
-  ZatlinError
-} from ".";
-import {
-  Generatable
-} from "./generatable";
+import {Identifier, Zatlin, ZatlinError} from ".";
+import {Generatable} from "./generatable";
 
 
 export class Backref extends Generatable<Array<string>, Array<string>> {

@@ -1,14 +1,7 @@
 //
 
-import {
-  ZatlinParser
-} from "../parser/parser";
-import {
-  Definition,
-  Generatable,
-  Identifier,
-  ZatlinError
-} from ".";
+import {ZatlinParser} from "../parser/parser";
+import {Definition, Generatable, Identifier, ZatlinError} from ".";
 
 
 export class Zatlin {

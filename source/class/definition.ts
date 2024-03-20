@@ -1,10 +1,6 @@
 //
 
-import {
-  Generatable,
-  Identifier,
-  Zatlin
-} from ".";
+import {Generatable, Identifier, Zatlin} from ".";
 
 
 export class Definition {

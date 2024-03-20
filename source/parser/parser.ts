@@ -1,12 +1,7 @@
 //
 
 import Parsimmon from "parsimmon";
-import {
-  Parser,
-  alt,
-  lazy,
-  seq
-} from "parsimmon";
+import {Parser, alt, lazy, seq} from "parsimmon";
 import {
   Backref,
   Circumflex,

@@ -1,9 +1,6 @@
 //
 
-import {
-  Identifier,
-  Zatlin
-} from ".";
+import {Identifier, Zatlin} from ".";
 
 
 export abstract class Generatable<C = void, D = void> {

@@ -1,12 +1,7 @@
 //
 
-import {
-  Zatlin,
-  ZatlinError
-} from ".";
-import {
-  Generatable
-} from "./generatable";
+import {Zatlin, ZatlinError} from ".";
+import {Generatable} from "./generatable";
 
 
 export class Identifier extends Generatable {
