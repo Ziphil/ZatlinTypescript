@@ -1,6 +1,6 @@
-node_modules
-dist
-file
+/node_modules
+/dist
+/file
 *.code-workspace
 *.env
 .vscode
