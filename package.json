@@ -1,6 +1,6 @@
 {
   "name": "zatlin",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "author": "Ziphil",
   "description": "TypeScript implementation of Zatlin, a domain specific language to generate words of a constructed langauge",
   "homepage": "https://github.com/Ziphil/TypescriptZatlin",
