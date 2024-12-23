@@ -1,7 +1,6 @@
-!dist/**/*
-node_modules
-test
-source
+/node_modules
+/test
+/source
 .git
 .github
 .vscode

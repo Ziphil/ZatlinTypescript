@@ -1,6 +1,6 @@
 {
   "name": "zatlin",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "author": "Ziphil",
   "description": "TypeScript implementation of Zatlin, a domain specific language to generate words of a constructed langauge",
   "homepage": "https://github.com/Ziphil/TypescriptZatlin",
@@ -8,13 +8,13 @@
   "main": "dist/index.js",
   "scripts": {
     "develop": "ts-node source/index.ts",
-    "build": "tsc",
+    "build": "tsc --project tsconfig-build.json",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "lint": "eslint source/**/*.ts test/**/*.ts",
     "lint:fix": "eslint --fix source/**/*.ts test/**/*.ts",
-    "prepare": "tsc"
+    "prepare": "tsc --project tsconfig-build.json"
   },
   "eslintConfig": {
     "extends": "ziphil",
