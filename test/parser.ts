@@ -1,8 +1,6 @@
 // @ts-nocheck
 
-import {
-  ZatlinParser
-} from "../source/parser/parser";
+import {ZatlinParser} from "../source/parser/parser";
 
 
 const parser = new ZatlinParser();

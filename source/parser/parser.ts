@@ -1,12 +1,7 @@
 //
 
 import Parsimmon from "parsimmon";
-import {
-  Parser,
-  alt,
-  lazy,
-  seq
-} from "parsimmon";
+import {Parser, alt, lazy, seq} from "parsimmon";
 import {
   Backref,
   Circumflex,
@@ -179,7 +174,7 @@ export class ZatlinParser {
     return parser;
   });
 
-  // 文末の (省略されているかもしれない) セミコロンおよびその後の改行を含むスペースをパースします。
+  /** 文末の (省略されているかもしれない) セミコロンおよびその後の改行を含むスペースをパースします。 */
   private semicolon: Parser<null> = lazy(() => {
     const semicolonParser = seq(Parsimmon.string(";"), this.blankOrBreak);
     const breakParser = seq(this.break, this.blankOrBreak);

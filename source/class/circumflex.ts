@@ -1,12 +1,7 @@
 //
 
-import {
-  Identifier,
-  Zatlin
-} from ".";
-import {
-  Generatable
-} from "./generatable";
+import {Identifier, Zatlin} from ".";
+import {Generatable} from "./generatable";
 
 
 export class Circumflex extends Generatable<Array<string>, Array<string>> {

@@ -1,14 +1,7 @@
 //
 
-import {
-  Backref,
-  Identifier,
-  Zatlin,
-  ZatlinError
-} from ".";
-import {
-  Generatable
-} from "./generatable";
+import {Backref, Identifier, Zatlin, ZatlinError} from ".";
+import {Generatable} from "./generatable";
 
 
 export class Sequence extends Generatable {

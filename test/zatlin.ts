@@ -1,8 +1,6 @@
 //
 
-import {
-  Zatlin
-} from "../source/class";
+import {Zatlin} from "../source/class";
 
 
 function repeat(zatlin: Zatlin, count: number, predicates: Array<(output: string) => unknown>): void {

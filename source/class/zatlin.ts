@@ -1,14 +1,7 @@
 //
 
-import {
-  ZatlinParser
-} from "../parser/parser";
-import {
-  Definition,
-  Generatable,
-  Identifier,
-  ZatlinError
-} from ".";
+import {ZatlinParser} from "../parser/parser";
+import {Definition, Generatable, Identifier, ZatlinError} from ".";
 
 
 export class Zatlin {
@@ -69,7 +62,7 @@ export class Zatlin {
     return generatable.generate(this);
   }
 
-  // 存在しない識別子を参照していないかチェックします。
+  /** 存在しない識別子を参照していないかチェックします。*/
   private checkUnknownIdentifier(): void {
     const generatables = [...this.definitions, this.mainGeneratable];
     for (const generatable of generatables) {
@@ -80,7 +73,7 @@ export class Zatlin {
     }
   }
 
-  // 識別子が循環参照していないかチェックします。
+  /** 識別子が循環参照していないかチェックします。*/
   private checkCircularIdentifier(): void {
     const identifier = this.mainGeneratable.findCircularIdentifier([], this);
     if (identifier !== undefined) {
@@ -88,8 +81,8 @@ export class Zatlin {
     }
   }
 
-  // メインパターンおよび識別子定義文の右辺のパターンにおいて、正当でないパターンが含まれていないかチェックします。
-  // 当初の想定から仕様が変更されたことにより、現在は全ての可能なパターンが正当であるため、このメソッドを呼ぶ意味はありません。
+  /** メインパターンおよび識別子定義文の右辺のパターンにおいて、正当でないパターンが含まれていないかチェックします。
+   * 当初の想定から仕様が変更されたことにより、現在は全ての可能なパターンが正当であるため、このメソッドを呼ぶ意味はありません。*/
   private checkValid(): void {
     const generatables = [...this.definitions.map((definition) => definition.content), this.mainGeneratable];
     for (const generatable of generatables) {
