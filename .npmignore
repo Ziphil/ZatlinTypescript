@@ -1,5 +1,8 @@
+node_modules
 test
 source
+.git
+.github
 .vscode
 tsconfig.json
 tslint.json
